@@ -5,9 +5,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>쇼핑몰 페이지</title>
+    <title>${currentCategory.cateName} - 쇼핑몰</title>
+    <style>
+        .category-header {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .category-path {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .category-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
+    <div class="category-header">
+        <div class="container">
+            <div class="category-path">${categoryPath}</div>
+            <h1 class="category-title">${currentCategory.cateName}</h1>
+        </div>
+    </div>
+
     <!-- Section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">

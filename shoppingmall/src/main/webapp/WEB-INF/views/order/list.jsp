@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="../homeUI.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>주문 내역</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .order-list {
             max-width: 1200px;
@@ -97,11 +97,9 @@
         <c:if test="${empty orders}">
             <div class="text-center py-5">
                 <h4 class="text-muted">주문 내역이 없습니다</h4>
-                <a href="/" class="btn btn-primary mt-3">쇼핑하러 가기</a>
+                <a href="/userHome" class="btn btn-primary mt-3">쇼핑하러 가기</a>
             </div>
         </c:if>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

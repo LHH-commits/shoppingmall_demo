@@ -46,11 +46,17 @@ public class CartController {
     ProductService productservice;
     @Autowired
     UserService usersservice;
+    @Autowired
+    CategoryService categoryservice;
 
     // 장바구니 페이지 보기
     @GetMapping("/user/cart")
     public String viewCart(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String userId = userDetails.getUsername();
+        // 카테고리 목록 가져오기(homeUI.jsp에서 사용)
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+
         List<Cart> cartItems = cartservice.selectCartList(userId);
         int cartTotalPrice = cartItems.stream()
                 .mapToInt(item -> item.getProduct().getpPrice() * item.getCartAmount())

@@ -22,7 +22,9 @@ import com.shoppingmall.demo.domain.OrderDetail;
 import com.shoppingmall.demo.domain.Users;
 import com.shoppingmall.demo.service.UserService;
 import com.shoppingmall.demo.domain.Cart;
+import com.shoppingmall.demo.domain.Category;
 import com.shoppingmall.demo.service.CartService;
+import com.shoppingmall.demo.service.CategoryService;
 import com.shoppingmall.demo.service.OrderDetailService;
 import com.shoppingmall.demo.service.PaymentService;
 import com.shoppingmall.demo.domain.Payment;
@@ -40,6 +42,9 @@ public class OrderController {
     
     @Autowired
     private CartService cartservice;
+
+    @Autowired
+    private CategoryService categoryservice;
 
     @Autowired
     private PaymentService paymentservice;
@@ -126,6 +131,10 @@ public class OrderController {
     // 주문 목록 조회
     @GetMapping("/list")
     public String orderList(Principal principal, Model model) {
+        // 카테고리 목록 가져오기(homeUI.jsp에서 사용)
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+        
         Users user = userservice.readUser(principal.getName());
         List<OrderDetail> orderDetails = orderservice.selectOrdersWithDetailsByUId(user.getuId());
         

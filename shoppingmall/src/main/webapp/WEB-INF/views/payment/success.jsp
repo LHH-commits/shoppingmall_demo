@@ -51,7 +51,7 @@
 
       <div class="btn-group">
         <a href="/order/list" class="btn btn-primary me-2">주문 내역 보기</a>
-        <a href="/" class="btn btn-secondary">쇼핑 계속하기</a>
+        <a href="/userHome" class="btn btn-secondary">쇼핑 계속하기</a>
       </div>
     </div>
 

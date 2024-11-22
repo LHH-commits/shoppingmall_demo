@@ -249,6 +249,14 @@ public class ProductController {
 	// 카테고리별 상품 연결
 	@GetMapping("/userProduct/{cateId}")
 	public String userProduct(@PathVariable("cateId") int cateId, Model model) {
+		// 현재 카테고리 정보
+		Category currentCategory = categoryservice.selectCategoryById(cateId);
+		model.addAttribute("currentCategory", currentCategory);
+
+		// 카테고리 경로
+		String categoryPath = categoryservice.getCategoryPath(cateId);
+		model.addAttribute("categoryPath", categoryPath);
+		
 		// 카테고리 목록은 selectTierCategory()로 변경 (계층구조 유지를 위해)
 		List<Category> cList = categoryservice.selectTierCategory();
 		model.addAttribute("cList", cList);

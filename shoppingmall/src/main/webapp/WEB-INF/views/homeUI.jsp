@@ -12,7 +12,7 @@
         <title>쇼핑몰 페이지</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="../css/styles.css" rel="stylesheet" />
         <!-- jQuery -->
@@ -126,16 +126,28 @@
                             장바구니
                             <span id="cartCount" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </a>
-                        <!-- 인증된 사용자는 로그아웃 버튼이 뜬다 -->
-                        <sec:authorize access="isAuthenticated()">
-	                        <a href="/logout" class="btn btn-secondary btn-sm me-2">로그아웃</a>
-	                        <sec:authorize access="hasRole('ROLE_ADMIN')">
-	                            <a href="/admin/main" class="btn btn-outline-info btn-sm">관리자페이지</a>
-	                        </sec:authorize>
-                        </sec:authorize>
-                        <sec:authorize access="isAnonymous()">
-                        	<a href="/" class="btn btn-primary btn-sm me-2">로그인</a>
-                        </sec:authorize>
+                        <!-- 사용자 메뉴 드롭다운 -->
+                        <div class="dropdown">
+                            <sec:authorize access="isAuthenticated()">
+                                <button class="btn btn-link" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle fs-4"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
+                                    <li><a class="dropdown-item" href="/order/list">주문 목록</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                                        <li><a class="dropdown-item" href="/admin/main">관리자 페이지</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    </sec:authorize>
+                                    <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
+                                </ul>
+                            </sec:authorize>
+                        </div>
+                        <div>
+                            <sec:authorize access="isAnonymous()">
+                                <a href="/" class="btn btn-primary btn-sm">로그인</a>
+                            </sec:authorize>
+                        </div>
                     </form>
                 </div>
             </div>
