@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoppingmall.demo.mapper.UserMapper">
+	<resultMap id="UserMap" type="Users">
+		<id property="uId" column="u_id"/>
+		<result property="uPassword" column="u_pw"/>
+		<result property="uAge" column="u_age"/>
+		<result property="uPhone" column="u_phone"/>
+		<result property="uName" column="u_name"/>
+		<result property="uDatetime" column="u_datetime"/>
+		<result property="uAddress" column="u_address"/>
+		<result property="isAccountNonExpired" column="u_isAccountNonExpired"/>
+		<result property="isAccountNonLocked" column="u_isAccountNonLocked"/>
+		<result property="isCredentialsNonExpired" column="u_isCredentialsNonExpired"/>
+		<result property="isEnabled" column="u_isEnabled"/>
+	</resultMap>
+
+	<!-- 유저 권한 읽기 -->
+	<select id="readAuthorities" parameterType="String" resultType="org.springframework.security.core.authority.SimpleGrantedAuthority">
+		SELECT 	u_auth
+		FROM	auth
+		WHERE	u_id = #{uId}
+	</select>
+	
+	<!-- 유저 정보 불러오기 -->
+	<select id="readUser" parameterType="String" resultMap="UserMap">
+		SELECT	u_id, u_pw, u_age, u_phone, u_name, u_datetime, u_address,
+				u_isAccountNonExpired, u_isAccountNonLocked,
+				u_isCredentialsNonExpired, u_isEnabled
+		FROM	users
+		WHERE	u_id = #{uId}
+	</select>
+	
+	<!-- 회원 등록 -->
+	<insert id="insertUser" parameterType="Users">
+		INSERT INTO	users (
+			u_id, u_pw, u_age, u_phone, u_name, u_address,
+			u_isAccountNonExpired, u_isAccountNonLocked,
+			u_isCredentialsNonExpired, u_isEnabled
+		) VALUES (
+			#{uId}, #{uPassword}, #{uAge}, #{uPhone}, #{uName}, #{uAddress},
+			#{isAccountNonExpired}, #{isAccountNonLocked}, #{isCredentialsNonExpired}, #{isEnabled}
+		)
+	</insert>
+	
+	<!-- 유저 권한 추가 (auth 테이블에 복사되어 올라감) -->
+	<insert id="createAuthority" parameterType="org.springframework.security.core.GrantedAuthority">
+		INSERT INTO	auth (
+			u_id, u_auth
+		) VALUES
+		<foreach item="authority" index="index" collection="authorities" separator=",">
+			(#{uId}, #{authority.role})
+		</foreach>
+		ON DUPLICATE KEY
+		UPDATE
+			u_id = #{uId}
+	</insert>
+	
+	<!-- 페이지네이션 적용을 위한 카운트 -->
+	<select id="countUsers" resultType="int">
+		SELECT	COUNT(*)
+		FROM	users
+	</select>
+	
+	<!-- 유저목록 with Pagination -->
+	<select id="selectUserList" parameterType="Pagination" resultMap="UserMap">
+		SELECT	ROW_NUMBER() OVER (ORDER BY u_datetime ASC) as row_num, 
+				u.u_id, u.u_name, u.u_phone, u.u_datetime,
+				a.u_auth
+		FROM	users u
+		LEFT JOIN auth a ON u.u_id = a.u_id
+		ORDER BY u_datetime DESC
+		LIMIT	#{startIndex}, #{perPage}
+	</select>
+</mapper>

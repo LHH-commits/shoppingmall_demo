@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoppingmall.demo.mapper.BoardMapper">
+	<resultMap id="BoardMap" type="Board">
+		<id property="bId" column="b_id"/>
+		<result property="bTitle" column="b_title"/>
+		<result property="bContent" column="b_content"/>
+		<result property="bViews" column="b_views"/>
+		<result property="bDatetime" column="b_datetime"/>
+		<result property="bWriter" column="b_writer"/>
+        <result property="bType" column="b_type"/>
+        <result property="uId" column="u_id"/>
+		
+		<association property="user" javaType="Users">
+			<id property="uId" column="u_id"/>
+			<result property="uName" column="u_name"/>
+		</association>
+	</resultMap>
+
+	<resultMap id="UsersMap" type="Users">
+		<id property="uId" column="u_id"/>
+		<result property="uName" column="u_name"/>
+	</resultMap>
+
+    <!-- 게시물 목록 -->
+	<select id="selectBoardList" parameterType="map" resultMap="BoardMap">
+	    SELECT		b_id,
+				    b_title,
+				    b_content,
+				    b_writer,
+				    b_datetime,
+				    b_views,
+                    b_type
+	    FROM        board
+	    WHERE		b_type = #{type}
+	    ORDER BY	b_datetime DESC
+	    LIMIT		#{pagination.startIndex}, #{pagination.perPage}
+	</select>
+
+    <!-- 각 게시판 유형별 카운트 -->
+    <select id="countBoardByType" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM board
+        WHERE b_type = #{type}
+    </select>
+
+    <!-- 게시물 작성(추가) -->
+	<insert id="insertBoard" parameterType="Board">
+		INSERT INTO	board (
+			b_title,
+			b_content,
+			b_writer,
+			b_type,
+			u_id,
+			b_views
+		) VALUES (
+			#{bTitle},
+			#{bContent},
+			#{bWriter},
+			#{bType},
+			#{uId},
+			0
+		)
+	</insert>
+
+    <!-- 게시물의 b_id를 기준으로 선택하여 상세보기 -->
+	<!-- 게시물의 b_id를 기준으로 게시물의 정보를 가져오기때문에 수정시에도 정보를 가져오기위해 사용 -->
+	<select id="selectBoardBid" parameterType="Integer" resultMap="BoardMap">
+		SELECT		b_id,
+					b_title,
+					b_content,
+					b_writer,
+					b_datetime,
+					b_views,
+					b_type,
+					u_id
+		FROM		board
+		WHERE		1=1
+		AND			b_id = #{bId}
+	</select>
+	
+	<!-- 게시물 조회수 증가 -->
+	<update id="countViews" parameterType="int">
+		UPDATE		board
+		SET			b_views = b_views+1
+		WHERE		b_id = #{bId}
+	</update>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="deleteBoard" parameterType="Integer">
+		DELETE FROM	board
+		WHERE		1=1
+		AND			b_id = #{bId}
+	</delete>
+	
+	<!-- 게시물 수정 -->
+	<!-- 수정된 내용을 반영 -->
+	<update id="updateBoard" parameterType="Board">
+		UPDATE	 	board
+		SET			b_title = #{bTitle},
+					b_content = #{bContent},
+					b_datetime = NOW()
+		WHERE		1=1
+		AND			b_id = #{bId}
+	</update>
+</mapper>
