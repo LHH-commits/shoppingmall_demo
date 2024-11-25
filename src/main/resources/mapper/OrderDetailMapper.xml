@@ -21,7 +21,7 @@
         </association>
     </resultMap>
 
-    <select id="getOrderDetail" parameterType="int" resultMap="OrderDetailMap">
+    <select id="getOrderDetail" parameterType="string" resultMap="OrderDetailMap">
         SELECT od.*, o.*, p.*
         FROM order_detail od
         JOIN orders o ON od.o_id = o.o_id
@@ -30,7 +30,7 @@
         LIMIT 1
     </select>
     
-    <select id="getOrderDetailList" parameterType="int" resultMap="OrderDetailMap">
+    <select id="getOrderDetailList" parameterType="string" resultMap="OrderDetailMap">
         SELECT od.*, o.*, p.*
         FROM order_detail od
         JOIN orders o ON od.o_id = o.o_id

@@ -26,17 +26,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Orders selectOrderById(int oId) {
+    public Orders selectOrderById(String oId) {
         return ordermapper.selectOrderById(oId);
     }
 
     @Override
-    public List<OrderDetail> selectOrderDetailsByOrderId(int oId) {
+    public List<OrderDetail> selectOrderDetailsByOrderId(String oId) {
         return ordermapper.selectOrderDetailsByOrderId(oId);
     }
 
     @Override
-    public List<Orders> selectOrdersByUId(int uId) {
+    public List<Orders> selectOrdersByUId(String uId) {
         return ordermapper.selectOrdersByUId(uId);
     }
 
@@ -46,17 +46,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(int oId) {
+    public void deleteOrder(String oId) {
         ordermapper.deleteOrder(oId);
     }
 
     @Override
-    public void deleteOrderDetail(int oId) {
+    public void deleteOrderDetail(String oId) {
         ordermapper.deleteOrderDetail(oId);
     }
 
     @Override
     public Orders getLatestOrder(String uId) {
         return ordermapper.getLatestOrder(uId);
+    }
+
+    @Override
+    public String getOrderId(Orders order) {
+        return ordermapper.getOrderId(order);
+    }
+
+    @Override
+    public List<OrderDetail> selectOrdersWithDetailsByUId(String uId) {
+        return ordermapper.selectOrdersWithDetailsByUId(uId);
     }
 }

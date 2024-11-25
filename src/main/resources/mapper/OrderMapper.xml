@@ -38,21 +38,32 @@
             <id property="pId" column="p_id"/>
             <result property="pName" column="p_name"/>
             <result property="pPrice" column="p_price"/>
+            <result property="pImgpath" column="p_imgpath"/>
+        </association>
+        
+        <!-- Payment 연관 매핑 -->
+        <association property="payment" javaType="Payment">
+            <id property="paymentId" column="payment_id"/>
+            <result property="status" column="status"/>
+            <result property="paymentType" column="payment_type"/>
+            <result property="paymentTime" column="payment_time"/>
         </association>
     </resultMap>
 
     <!-- 주문 생성 -->
     <insert id="insertOrder" parameterType="Orders" useGeneratedKeys="true" keyProperty="oId">
         INSERT INTO orders (
+            o_id,
             o_info,
             o_datetime,
             o_address,
             u_id
         ) VALUES (
+            #{oId},
             #{oInfo},
             NOW(),
             #{oAddress},
-            #{user.uId}
+            #{uId}
         )
     </insert>
 
@@ -72,7 +83,7 @@
     </insert>
 
     <!-- 주문 조회 (단일) -->
-    <select id="selectOrderById" parameterType="int" resultMap="OrderMap">
+    <select id="selectOrderById" parameterType="string" resultMap="OrderMap">
         SELECT  o.o_id,
                 o.o_info,
                 o.o_datetime,
@@ -85,7 +96,7 @@
     </select>
 
     <!-- 주문 상세 조회 -->
-    <select id="selectOrderDetailsByOrderId" parameterType="int" resultMap="OrderDetailMap">
+    <select id="selectOrderDetailsByOrderId" parameterType="string" resultMap="OrderDetailMap">
         SELECT  od.od_id,
                 od.o_id,
                 od.p_id,
@@ -99,7 +110,7 @@
     </select>
 
     <!-- 사용자별 주문 목록 조회 -->
-    <select id="selectOrdersByUserId" parameterType="int" resultMap="OrderMap">
+    <select id="selectOrdersByUId" parameterType="string" resultMap="OrderMap">
         SELECT  o.o_id,
                 o.o_info,
                 o.o_datetime,
@@ -121,13 +132,13 @@
     </update>
 
     <!-- 주문 삭제 -->
-    <delete id="deleteOrder" parameterType="int">
+    <delete id="deleteOrder" parameterType="string">
         DELETE FROM orders
         WHERE o_id = #{oId}
     </delete>
 
     <!-- 주문 상세 삭제 -->
-    <delete id="deleteOrderDetail" parameterType="int">
+    <delete id="deleteOrderDetail" parameterType="string">
         DELETE FROM order_detail
         WHERE o_id = #{oId}
     </delete>
@@ -140,5 +151,38 @@
         WHERE   o.u_id = #{uId}
         ORDER BY o.o_datetime DESC
         LIMIT 1
+    </select>
+
+    <select id="getOrderId" parameterType="Orders" resultType="String">
+        SELECT o_id 
+        FROM orders 
+        WHERE u_id = #{uId} 
+        ORDER BY o_datetime DESC 
+        LIMIT 1
+    </select>
+
+    <!-- 사용자별 주문 목록 상세 조회 (주문, 주문상세, 상품, 결제 정보 포함) -->
+    <select id="selectOrdersWithDetailsByUId" parameterType="string" resultMap="OrderDetailMap">
+        SELECT  o.o_id,
+                o.o_info,
+                o.o_datetime,
+                o.o_address,
+                od.od_id,
+                od.od_count,
+                od.od_price,
+                p.p_id,
+                p.p_name,
+                p.p_imgpath,
+                p.p_price,
+                pm.payment_id,
+                pm.status,
+                pm.payment_type,
+                pm.payment_time
+        FROM    orders o
+        JOIN    order_detail od ON o.o_id = od.o_id
+        JOIN    product p ON od.p_id = p.p_id
+        LEFT JOIN payment pm ON o.o_id = pm.o_id
+        WHERE   o.u_id = #{uId}
+        ORDER BY o.o_datetime DESC
     </select>
 </mapper>

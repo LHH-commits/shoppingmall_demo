@@ -14,23 +14,29 @@ public interface OrderMapper {
     public void insertOrderDetail(OrderDetail orderDetail);
 
     // 주문 번호(o_id)로 해당 주문의 기본 정보를 조회
-    public Orders selectOrderById(int oId);
+    public Orders selectOrderById(String oId);
 
     // 주문 번호(o_id)에 해당하는 모든 주문 상세 정보(상품, 수량, 가격 등) 조회
-    public List<OrderDetail> selectOrderDetailsByOrderId(int oId);
+    public List<OrderDetail> selectOrderDetailsByOrderId(String oId);
 
     // 특정 사용자(u_id)의 모든 주문 목록을 조회
-    public List<Orders> selectOrdersByUId(int uId);
+    public List<Orders> selectOrdersByUId(String uId);
 
     // 주문 정보(배송지, 요청사항 등) 수정
     public void updateOrder(Orders order);
 
     // 주문 번호(o_id)에 해당하는 주문을 삭제
-    public void deleteOrder(int oId);
+    public void deleteOrder(String oId);
 
     // 주문 번호(o_id)에 해당하는 모든 주문 상세 정보를 삭제
-    public void deleteOrderDetail(int oId);
+    public void deleteOrderDetail(String oId);
 
     // 사용자의 최근 주문 정보 조회
     public Orders getLatestOrder(String uId);
+
+    // 주문 번호 조회
+    public String getOrderId(Orders order);
+
+    // 사용자별 주문 목록 상세 조회
+    public List<OrderDetail> selectOrdersWithDetailsByUId(String uId);
 }

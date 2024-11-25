@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoppingmall.demo.mapper.OrderMapper">
+
+    <!-- Orders 결과 매핑 -->
+    <resultMap id="OrderMap" type="Orders">
+        <id property="oId" column="o_id"/>
+        <result property="oInfo" column="o_info"/>
+        <result property="oDatetime" column="o_datetime"/>
+        <result property="oAddress" column="o_address"/>
+        <result property="uId" column="u_id"/>
+        
+        <!-- Users 연관 매핑 -->
+        <association property="user" javaType="Users">
+            <id property="uId" column="u_id"/>
+            <result property="uName" column="u_name"/>
+        </association>
+    </resultMap>
+
+    <!-- OrderDetail 결과 매핑 -->
+    <resultMap id="OrderDetailMap" type="OrderDetail">
+        <id property="odId" column="od_id"/>
+        <result property="oId" column="o_id"/>
+        <result property="pId" column="p_id"/>
+        <result property="odCount" column="od_count"/>
+        <result property="odPrice" column="od_price"/>
+        
+        <!-- Orders 연관 매핑 -->
+        <association property="orders" javaType="Orders">
+            <id property="oId" column="o_id"/>
+            <result property="oInfo" column="o_info"/>
+            <result property="oDatetime" column="o_datetime"/>
+            <result property="oAddress" column="o_address"/>
+        </association>
+        
+        <!-- Product 연관 매핑 -->
+        <association property="product" javaType="Product">
+            <id property="pId" column="p_id"/>
+            <result property="pName" column="p_name"/>
+            <result property="pPrice" column="p_price"/>
+        </association>
+    </resultMap>
+
+    <!-- 주문 생성 -->
+    <insert id="insertOrder" parameterType="Orders" useGeneratedKeys="true" keyProperty="oId">
+        INSERT INTO orders (
+            o_info,
+            o_datetime,
+            o_address,
+            u_id
+        ) VALUES (
+            #{oInfo},
+            NOW(),
+            #{oAddress},
+            #{user.uId}
+        )
+    </insert>
+
+    <!-- 주문 상세 생성 -->
+    <insert id="insertOrderDetail" parameterType="OrderDetail">
+        INSERT INTO order_detail (
+            o_id,
+            p_id,
+            od_count,
+            od_price
+        ) VALUES (
+            #{oId},
+            #{pId},
+            #{odCount},
+            #{odPrice}
+        )
+    </insert>
+
+    <!-- 주문 조회 (단일) -->
+    <select id="selectOrderById" parameterType="int" resultMap="OrderMap">
+        SELECT  o.o_id,
+                o.o_info,
+                o.o_datetime,
+                o.o_address,
+                u.u_id,
+                u.u_name
+        FROM    orders o
+        JOIN    users u ON o.u_id = u.u_id
+        WHERE   o.o_id = #{oId}
+    </select>
+
+    <!-- 주문 상세 조회 -->
+    <select id="selectOrderDetailsByOrderId" parameterType="int" resultMap="OrderDetailMap">
+        SELECT  od.od_id,
+                od.o_id,
+                od.p_id,
+                od.od_count,
+                od.od_price,
+                p.p_name,
+                p.p_price
+        FROM    order_detail od
+        JOIN    product p ON od.p_id = p.p_id
+        WHERE   od.o_id = #{oId}
+    </select>
+
+    <!-- 사용자별 주문 목록 조회 -->
+    <select id="selectOrdersByUserId" parameterType="int" resultMap="OrderMap">
+        SELECT  o.o_id,
+                o.o_info,
+                o.o_datetime,
+                o.o_address,
+                u.u_id,
+                u.u_name
+        FROM    orders o
+        JOIN    users u ON o.u_id = u.u_id
+        WHERE   u.u_id = #{uId}
+        ORDER BY o.o_datetime DESC
+    </select>
+
+    <!-- 주문 수정 -->
+    <update id="updateOrder" parameterType="Orders">
+        UPDATE  orders
+        SET     o_info = #{oInfo},
+                o_address = #{oAddress}
+        WHERE   o_id = #{oId}
+    </update>
+
+    <!-- 주문 삭제 -->
+    <delete id="deleteOrder" parameterType="int">
+        DELETE FROM orders
+        WHERE o_id = #{oId}
+    </delete>
+
+    <!-- 주문 상세 삭제 -->
+    <delete id="deleteOrderDetail" parameterType="int">
+        DELETE FROM order_detail
+        WHERE o_id = #{oId}
+    </delete>
+
+    <!-- 사용자의 최근 주문 정보 조회 -->
+    <select id="getLatestOrder" parameterType="string" resultMap="OrderMap">
+        SELECT  o.*, u.u_name
+        FROM    orders o
+        JOIN    users u ON o.u_id = u.u_id
+        WHERE   o.u_id = #{uId}
+        ORDER BY o.o_datetime DESC
+        LIMIT 1
+    </select>
+</mapper>

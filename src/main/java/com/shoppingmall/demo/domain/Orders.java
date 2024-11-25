@@ -2,20 +2,34 @@ package com.shoppingmall.demo.domain;
 
 import com.shoppingmall.demo.domain.Product;
 import com.shoppingmall.demo.domain.Users;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class Orders {
-	private int oId;
+	private String oId;
 	private String oInfo;
 	private String oDatetime;
 	private String oAddress;
 	private String uId;
 	private Users user;
 	private Product product;
+
 	
-	public int getoId() {
+	private Payment payment;
+	private List<OrderDetail> orderDetails;
+	
+	private int totalAmount;
+	
+	private String paymentStatus;
+	
+	private String paymentType;
+	
+	private LocalDateTime paymentTime;
+	
+	public String getoId() {
 		return oId;
 	}
-	public void setoId(int oId) {
+	public void setoId(String oId) {
 		this.oId = oId;
 	}
 	public String getoInfo() {
@@ -54,6 +68,40 @@ public class Orders {
 	public void setUId(String uId) {
 		this.uId = uId;
 	}
-	
-	
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+	public int getTotalAmount() {
+		return totalAmount;
+	}
+	public void setTotalAmount(int totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+	public String getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+	public LocalDateTime getPaymentTime() {
+		return paymentTime;
+	}
+	public void setPaymentTime(LocalDateTime paymentTime) {
+		this.paymentTime = paymentTime;
+	}
+	public Payment getPayment() {
+		return payment;
+	}
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 }

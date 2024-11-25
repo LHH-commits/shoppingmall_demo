@@ -29,7 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentmapper.selectPaymentById(paymentId);
     }
     @Override
-    public Payment selectPaymentByOrderId(int oId) {
+    public Payment selectPaymentByOrderId(String oId) {
         return paymentmapper.selectPaymentByOrderId(oId);
     }
     @Override

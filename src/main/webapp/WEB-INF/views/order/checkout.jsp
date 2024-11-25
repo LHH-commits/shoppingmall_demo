@@ -55,7 +55,6 @@
             </div>
             <div class="card-body">
                 <form id="orderForm">
-                	<input type="hidden" name="uId" value="${user.uId}">
                     <div class="mb-3">
                         <label for="uName" class="form-label">수령인</label>
                         <input type="text" class="form-control" id="uName" name="uName" value="${user.uName}" required>
@@ -102,20 +101,29 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(orderData)
                 });
 
                 if (response.ok) {
-                    const order = await response.json();
+                    const responseData = await response.json();
+                    console.log('서버 응답:', responseData);
                     
-                    console.log('Order ID: ', order.oId);
-                    window.location.href = `/payment/checkout?orderId=${order.oId}`;
+                    if (responseData && responseData.oId) {
+                        const orderId = responseData.oId;
+                        window.location.href = '/payment/checkout?orderId=' + orderId;
+                    } else {
+                        console.error('잘못된 응답:', responseData);
+                        alert('주문 정보가 올바르지 않습니다.');
+                    }
                 } else {
+                    const errorData = await response.text();
+                    console.error('서버 오류:', errorData);
                     alert('주문 생성에 실패했습니다.');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('요청 오류:', error);
                 alert('주문 처리 중 오류가 발생했습니다.');
             }
         }

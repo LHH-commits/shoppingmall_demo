@@ -53,16 +53,14 @@ public class CartController {
     @GetMapping("/user/cart")
     public String viewCart(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String userId = userDetails.getUsername();
+        // 카테고리 목록 가져오기(homeUI.jsp에서 사용)
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+
         List<Cart> cartItems = cartservice.selectCartList(userId);
         int cartTotalPrice = cartItems.stream()
                 .mapToInt(item -> item.getProduct().getpPrice() * item.getCartAmount())
                 .sum();
-        
-        // 카테고리 목록 가져오기
- 		List<Category> cList = categoryservice.selectTierCategory();
- 		model.addAttribute("cList", cList);
-     		
-     		
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartTotalPrice", cartTotalPrice);
         return "/userCart";

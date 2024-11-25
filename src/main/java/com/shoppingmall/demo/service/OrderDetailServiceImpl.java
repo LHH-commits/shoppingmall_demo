@@ -12,12 +12,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private OrderDetailMapper orderDetailmapper;
 
     @Override
-    public OrderDetail getOrderDetail(int oId) {
+    public OrderDetail getOrderDetail(String oId) {
         return orderDetailmapper.getOrderDetail(oId);
     }
 
     @Override
-    public List<OrderDetail> getOrderDetailList(int oId) {
+    public List<OrderDetail> getOrderDetailList(String oId) {
         return orderDetailmapper.getOrderDetailList(oId);
     }
 

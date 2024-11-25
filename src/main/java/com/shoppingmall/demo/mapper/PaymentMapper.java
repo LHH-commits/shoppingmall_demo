@@ -14,7 +14,7 @@ public interface PaymentMapper {
     
     // 결제 정보 조회
     public Payment selectPaymentById(String paymentId);
-    public Payment selectPaymentByOrderId(int oId);
+    public Payment selectPaymentByOrderId(String oId);
     public List<Payment> selectPaymentsByUserId(String uId);
     
     // 결제 상태 업데이트

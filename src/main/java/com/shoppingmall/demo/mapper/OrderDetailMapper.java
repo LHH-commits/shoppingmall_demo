@@ -8,10 +8,10 @@ import com.shoppingmall.demo.domain.OrderDetail;
 @Mapper
 public interface OrderDetailMapper {
     // 주문 상세 정보 조회
-    public OrderDetail getOrderDetail(int oId);
+    public OrderDetail getOrderDetail(String oId);
     
     // 주문에 대한 모든 상세 정보 조회
-    public List<OrderDetail> getOrderDetailList(int oId);
+    public List<OrderDetail> getOrderDetailList(String oId);
     
     // 주문 상세 정보 저장
     public void insertOrderDetail(OrderDetail orderDetail);

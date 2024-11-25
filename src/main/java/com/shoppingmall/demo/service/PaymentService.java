@@ -9,7 +9,7 @@ public interface PaymentService {
     
     // 결제 정보 조회
     Payment selectPaymentById(String paymentId);
-    Payment selectPaymentByOrderId(int oId);
+    Payment selectPaymentByOrderId(String oId);
     List<Payment> selectPaymentsByUserId(String uId);
     
     // 결제 상태 업데이트

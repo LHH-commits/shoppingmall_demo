@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Payment {
     private String paymentId;      // 토스 paymentKey
-    private int oId;              // orders의 o_id
+    private String oId;              // orders의 o_id
     private String uId;           // users의 u_id
     private int amount;
     private String paymentType;
@@ -22,10 +22,10 @@ public class Payment {
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
     }
-    public int getoId() {
+    public String getoId() {
         return oId;
     }
-    public void setoId(int oId) {
+    public void setoId(String oId) {
         this.oId = oId;
     }
     public String getuId() {

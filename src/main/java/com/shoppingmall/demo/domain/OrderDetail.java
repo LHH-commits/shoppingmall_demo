@@ -5,12 +5,13 @@ import com.shoppingmall.demo.domain.Product;
 
 public class OrderDetail {
     private int odId;
-    private int oId;
+    private String oId;
     private int pId;
     private int odCount;    // 주문 상품 수량(개수)
     private int odPrice;    // 주문 상품 가격(총액)
     private Orders orders;
     private Product product;
+    private Payment payment;
     
     public int getOdId() {
         return odId;
@@ -18,10 +19,10 @@ public class OrderDetail {
     public void setOdId(int odId) {
         this.odId = odId;
     }
-    public int getoId() {
+    public String getoId() {
         return oId;
     }
-    public void setoId(int oId) {
+    public void setoId(String oId) {
         this.oId = oId;
     }
     public int getpId() {
@@ -53,5 +54,11 @@ public class OrderDetail {
     }
     public void setProduct(Product product) {
         this.product = product;
+    }
+    public Payment getPayment() {
+        return payment;
+    }
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

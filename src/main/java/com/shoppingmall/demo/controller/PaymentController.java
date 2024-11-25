@@ -13,11 +13,17 @@ import com.shoppingmall.demo.domain.Orders;
 import com.shoppingmall.demo.domain.OrderDetail;
 import com.shoppingmall.demo.service.OrderService;
 import com.shoppingmall.demo.service.OrderDetailService;
+import com.shoppingmall.demo.service.UserService;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
     @Autowired
     PaymentService paymentservice;
@@ -28,13 +34,21 @@ public class PaymentController {
     @Autowired
     OrderDetailService orderDetailservice;
 
+    @Autowired
+    UserService userservice;
+
     @GetMapping("/checkout")
-    public String checkout(@RequestParam("orderId") int orderId, Model model, @AuthenticationPrincipal Users user) {
+    public String checkout(@RequestParam("orderId") String orderId, Model model, @AuthenticationPrincipal Users user) {
+        logger.debug("Received orderId: {}", orderId);
+        logger.debug("User: {}", user);
+        
         if (user == null) {
             return "redirect:/";
         }
         
         Orders orders = orderservice.selectOrderById(orderId);
+        logger.debug("Found order: {}", orders);
+        
         if (orders == null || !orders.getUId().equals(user.getuId())) {
             return "redirect:/order/list";
         }
@@ -52,7 +66,11 @@ public class PaymentController {
     }
 
     @GetMapping("/success")
-    public String success() {
+    public String paymentSuccess(Model model, Principal principal) {
+        if (principal != null) {
+            Users user = userservice.readUser(principal.getName());
+            model.addAttribute("user", user);
+        }
         return "/payment/success";
     }
 
