@@ -42,8 +42,18 @@
                 <h3 style="margin-bottom: 110px; margin-top:100px"><strong>${product.pName}</strong></h3><!-- 상품명 -->
                 <h5 style="margin-bottom: 90px;""><strong>판매가</strong> ${product.pPrice} 원</h5> <!-- 가격 -->
                 <h6 style="margin-bottom: 10px"><strong>판매자</strong> ${product.pSeller}</h6>
+                
+                <div class="mb-3">
+                    <label for="amount" class="form-label">수량</label>
+                    <div class="input-group" style="width: 150px;">
+                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseAmount()">-</button>
+                        <input type="text" id="amount" class="form-control text-center" value="1" readonly>
+                        <button class="btn btn-outline-secondary" type="button" onclick="increaseAmount()">+</button>
+                    </div>
+                </div>
+                
                 <button class="btn btn-outline-dark btn-lg" onclick="addToCart('${product.pId}')">장바구니 추가</button>
-                <button class="btn btn-primary btn-lg">결제하기</button>
+                <button class="btn btn-primary btn-lg" onclick="directCheckout(${product.pId})">결제하기</button>
             </div>
         </div>
         <div class="product-description p-4">
@@ -54,10 +64,15 @@
 
     <script>
         function addToCart(productId) {
+            const amount = document.getElementById('amount').value;  // 선택된 수량 가져오기
+            
             $.ajax({
                 url: '/addCart',
                 type: 'POST', 
-                data: { pId: productId },
+                data: { 
+                    pId: productId,
+                    cartAmount: amount  // 선택된 수량 전달
+                },
                 success: function(response) {
                     alert(response);
                     updateCartCount();
@@ -74,6 +89,39 @@
                 type: 'GET',
                 success: function(count) {
                     $('#cartCount').text(count);
+                }
+            });
+        }
+
+        function increaseAmount() {
+            const amountInput = document.getElementById('amount');
+            let currentAmount = parseInt(amountInput.value);
+            amountInput.value = currentAmount + 1;
+        }
+
+        function decreaseAmount() {
+            const amountInput = document.getElementById('amount');
+            let currentAmount = parseInt(amountInput.value);
+            if (currentAmount > 1) {
+                amountInput.value = currentAmount - 1;
+            }
+        }
+
+        function directCheckout(productId) {
+            const amount = document.getElementById('amount').value;
+            
+            $.ajax({
+                url: '/order/direct-checkout',
+                type: 'POST',
+                data: { 
+                    pId: productId,
+                    amount: amount
+                },
+                success: function(response) {
+                    window.location.href = '/order/checkout';
+                },
+                error: function(xhr) {
+                    alert('주문 처리 중 오류가 발생했습니다.');
                 }
             });
         }

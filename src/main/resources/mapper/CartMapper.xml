@@ -42,9 +42,16 @@
 	<!-- 장바구니에 상품 담기 -->
 	<insert id="addToCart" parameterType="Cart">
 		INSERT INTO cart (u_id, p_id, cart_amount)
-		VALUES (#{uId}, #{pId}, 1)
+		VALUES (#{uId}, #{pId}, 
+			CASE 
+				WHEN #{cartAmount} > 0 THEN #{cartAmount}
+				ELSE 1
+			END)
 		ON DUPLICATE KEY UPDATE
-			cart_amount = cart_amount + 1
+			cart_amount = CASE 
+				WHEN #{cartAmount} > 0 THEN #{cartAmount}
+				ELSE cart_amount + 1
+			END
 	</insert>
 	
 	<!-- 장바구니에서 상품 수량 업데이트 -->

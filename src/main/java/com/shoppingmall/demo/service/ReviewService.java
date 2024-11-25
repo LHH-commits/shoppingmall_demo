@@ -1,13 +1,10 @@
-package com.shoppingmall.demo.mapper;
+package com.shoppingmall.demo.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.shoppingmall.demo.domain.Review;
 
-@Mapper
-public interface ReviewMapper {
+public interface ReviewService {
 
 	public void insertReview(Review review);
 	

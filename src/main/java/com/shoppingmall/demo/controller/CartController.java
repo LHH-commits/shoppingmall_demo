@@ -71,12 +71,15 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<String> addToCart(
             @RequestParam("pId") int pId,
+            @RequestParam(value = "cartAmount", defaultValue = "0") int cartAmount,
             @AuthenticationPrincipal UserDetails userDetails) {
         try {
             String userId = userDetails.getUsername();
             Cart cart = new Cart();
             cart.setuId(userId);
             cart.setpId(pId);
+            cart.setCartAmount(cartAmount);
+            
             cartservice.addToCart(cart);
             return ResponseEntity.ok("장바구니에 추가되었습니다.");
         } catch (Exception e) {

@@ -21,11 +21,15 @@ import com.shoppingmall.demo.domain.Orders;
 import com.shoppingmall.demo.domain.OrderDetail;
 import com.shoppingmall.demo.domain.Users;
 import com.shoppingmall.demo.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.shoppingmall.demo.domain.Cart;
 import com.shoppingmall.demo.domain.Category;
 import com.shoppingmall.demo.service.CartService;
 import com.shoppingmall.demo.service.CategoryService;
 import com.shoppingmall.demo.service.OrderDetailService;
+import com.shoppingmall.demo.service.ProductService;
 import com.shoppingmall.demo.service.PaymentService;
 import com.shoppingmall.demo.domain.Payment;
 
@@ -47,14 +51,53 @@ public class OrderController {
     private CategoryService categoryservice;
 
     @Autowired
+    private ProductService productservice;
+
+    @Autowired
     private PaymentService paymentservice;
 
     @Autowired
     private OrderDetailService orderDetailService;
 
+    // 주문서 작성 페이지(직접 결제)
+    @PostMapping("/direct-checkout")
+    public ResponseEntity<?> directCheckout(@RequestParam int pId, 
+                                          @RequestParam int amount,
+                                          Principal principal) {
+        try {
+            Users user = userservice.readUser(principal.getName());
+            
+            // 임시 장바구니에 상품 추가
+            Cart tempCart = new Cart();
+            tempCart.setpId(pId);
+            tempCart.setCartAmount(amount);
+            tempCart.setuId(user.getuId());
+            tempCart.setProduct(productservice.selectProductPid(pId));
+            
+            List<Cart> tempCartItems = new ArrayList<>();
+            tempCartItems.add(tempCart);
+            
+            // 세션이 아닌 Model에 데이터를 전달하기 위해 임시로 cartservice 사용
+            cartservice.clearCart(user.getuId()); // 기존 장바구니 비우기
+            cartservice.addToCart(tempCart);     // 임시 상품 추가
+            
+            logger.info("직접 결제 요청 - pId: {}, amount: {}", pId, amount);  // 로그 추가
+            
+            return ResponseEntity.ok().build();
+            
+        } catch (Exception e) {
+            logger.error("직접 결제 처리 중 오류 발생: ", e);
+            return ResponseEntity.badRequest().body("결제 처리 중 오류가 발생했습니다.");
+        }
+    }
+
     // 주문서 작성 페이지
     @GetMapping("/checkout")
     public String orderForm(Model model, Principal principal) {
+        // 카테고리 목록 가져오기 (HomeUI.jsp에서 사용)
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+        
         Users user = userservice.readUser(principal.getName());
         List<Cart> cartItems = cartservice.selectCartList(user.getuId());
         
