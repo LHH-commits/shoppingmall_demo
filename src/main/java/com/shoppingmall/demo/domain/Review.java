@@ -1,7 +1,6 @@
 package com.shoppingmall.demo.domain;
 
-import com.shoppingmall.demo.domain.Product;
-import com.shoppingmall.demo.domain.Users;
+import java.util.Date;
 
 public class Review {
 	private int rId;
@@ -10,15 +9,15 @@ public class Review {
 	private String rWriter;
 	private int pId;
 	private String uId;
-	private String rDatetime;
+	private Date rDatetime;
 	
 	private Product product;
 	private Users user;
 	
-	public String getrDatetime() {
+	public Date getrDatetime() {
 		return rDatetime;
 	}
-	public void setrDatetime(String rDatetime) {
+	public void setrDatetime(Date rDatetime) {
 		this.rDatetime = rDatetime;
 	}
 	public int getpId() {

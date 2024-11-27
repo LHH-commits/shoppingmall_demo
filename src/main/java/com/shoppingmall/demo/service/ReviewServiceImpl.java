@@ -43,4 +43,14 @@ public class ReviewServiceImpl implements ReviewService {
 	public void updateReview(Review review) {
 		reviewmapper.updateReview(review);
 	}
+
+	@Override
+	public List<Review> getReviewsByUid(String uId) {
+		return reviewmapper.getReviewsByUid(uId);
+	}
+
+	@Override
+	public Review getReviewByUserAndProduct(String uId, int pId) {
+		return reviewmapper.getReviewByUserAndProduct(uId, pId);
+	}
 }

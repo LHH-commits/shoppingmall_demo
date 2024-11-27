@@ -10,6 +10,13 @@
 		<result property="pId" column="p_id"/>
 		<result property="uId" column="u_id"/>
 		<result property="rDatetime" column="r_datetime"/>
+
+		<association property="product" javaType="Product">
+			<id property="pId" column="p_id"/>
+			<result property="pName" column="p_name"/>
+			<result property="pImgpath" column="p_imgpath"/>
+			<result property="pSeller" column="p_seller"/>
+		</association>
 	</resultMap>
 	
 	<!-- 리뷰 작성 -->
@@ -18,7 +25,7 @@
 		VALUES (#{rId}, #{rContent}, #{rScore}, #{rWriter}, #{pId}, #{uId})
 	</insert>
 	
-	<!-- 리뷰 조회 -->
+	<!-- 상품 리뷰 조회 -->
 	<select id="ListReviewByPid" parameterType="int" resultMap="ReviewMap">
 		SELECT  *
 		FROM	review
@@ -30,6 +37,15 @@
 		SELECT	*
 		FROM	review
 		WHERE	r_id = #{rId}
+	</select>
+
+	<!-- 개인 리뷰 조회 -->
+	<select id="getReviewsByUid" parameterType="String" resultMap="ReviewMap">
+		SELECT	r.*, p.p_name, p.p_imgpath, p.p_seller
+		FROM	review r
+		JOIN	product p ON r.p_id = p.p_id
+		WHERE	r.u_id = #{uId}
+		ORDER BY r.r_datetime DESC
 	</select>
 	
 	<!-- 댓글 삭제 -->
@@ -47,8 +63,17 @@
 	<!-- 댓글 수정 -->
 	<update id="updateReview" parameterType="Review">
 		UPDATE 	review
-		SET		r_content = #{rContent}
+		SET		r_content = #{rContent},
+				r_score = #{rScore},
 				r_datetime = NOW()
 		WHERE	r_id = #{rId}
 	</update>
+
+	<!-- 사용자와 상품에 대한 리뷰 조회 -->
+	<select id="getReviewByUserAndProduct" resultType="Review">
+		SELECT *
+		FROM review
+		WHERE u_id = #{uId} AND p_id = #{pId}
+	</select>
+
 </mapper>

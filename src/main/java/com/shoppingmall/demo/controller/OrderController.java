@@ -16,22 +16,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.shoppingmall.demo.service.OrderService;
-import com.shoppingmall.demo.domain.Orders;
-import com.shoppingmall.demo.domain.OrderDetail;
-import com.shoppingmall.demo.domain.Users;
-import com.shoppingmall.demo.service.UserService;
-
 import jakarta.servlet.http.HttpSession;
 
-import com.shoppingmall.demo.domain.Cart;
-import com.shoppingmall.demo.domain.Category;
 import com.shoppingmall.demo.service.CartService;
 import com.shoppingmall.demo.service.CategoryService;
 import com.shoppingmall.demo.service.OrderDetailService;
 import com.shoppingmall.demo.service.ProductService;
 import com.shoppingmall.demo.service.PaymentService;
+import com.shoppingmall.demo.service.ReviewService;
+import com.shoppingmall.demo.service.UserService;
+import com.shoppingmall.demo.service.OrderService;
+
 import com.shoppingmall.demo.domain.Payment;
+import com.shoppingmall.demo.domain.Review;
+import com.shoppingmall.demo.domain.Cart;
+import com.shoppingmall.demo.domain.Category;
+import com.shoppingmall.demo.domain.Orders;
+import com.shoppingmall.demo.domain.OrderDetail;
+import com.shoppingmall.demo.domain.Users;
 
 @Controller
 @RequestMapping("/order")
@@ -53,6 +55,9 @@ public class OrderController {
     @Autowired
     private ProductService productservice;
 
+    @Autowired
+    private ReviewService reviewservice;
+    
     @Autowired
     private PaymentService paymentservice;
 
@@ -180,6 +185,10 @@ public class OrderController {
         
         Users user = userservice.readUser(principal.getName());
         List<OrderDetail> orderDetails = orderservice.selectOrdersWithDetailsByUId(user.getuId());
+
+        // 사용자의 리뷰 목록 가져오기
+        List<Review> reviews = reviewservice.getReviewsByUid(user.getuId());
+        model.addAttribute("reviews", reviews);
         
         // OrderDetail 목록을 Orders 기준으로 그룹화
         Map<String, Orders> orderMap = new HashMap<>();

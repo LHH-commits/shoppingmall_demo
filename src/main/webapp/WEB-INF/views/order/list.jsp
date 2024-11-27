@@ -73,6 +73,27 @@
                                     <fmt:formatNumber value="${detail.odPrice}" type="currency" 
                                                     currencySymbol="₩"/>
                                 </p>
+                                
+                                <c:set var="hasReview" value="false" />
+                                <c:forEach items="${reviews}" var="review">
+                                    <c:if test="${review.pId eq detail.product.pId}">
+                                        <c:set var="hasReview" value="true" />
+                                    </c:if>
+                                </c:forEach>
+                                
+                                <c:choose>
+                                    <c:when test="${hasReview}">
+                                        <button class="btn btn-outline-secondary btn-sm mt-2" disabled>
+                                            상품평 작성 완료
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button onclick="location.href='/review/insert?pId=${detail.product.pId}'" 
+                                                class="btn btn-outline-primary btn-sm mt-2">
+                                            상품평 작성
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </c:forEach>

@@ -134,6 +134,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
                                     <li><a class="dropdown-item" href="/order/list">주문 목록</a></li>
+                                    <li><a class="dropdown-item" href="/review/list">상품평 관리</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <sec:authorize access="hasRole('ROLE_ADMIN')">
                                         <li><a class="dropdown-item" href="/admin/main">관리자 페이지</a></li>

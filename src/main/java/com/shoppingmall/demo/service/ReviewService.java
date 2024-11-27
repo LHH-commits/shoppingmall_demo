@@ -17,4 +17,8 @@ public interface ReviewService {
 	public void deleteReviewByPid(int pId);
 	
 	public void updateReview(Review review);
+
+	public List<Review> getReviewsByUid(String uId);
+
+	public Review getReviewByUserAndProduct(String uId, int pId);
 }

@@ -29,7 +29,8 @@ import com.shoppingmall.demo.domain.Product;
 import com.shoppingmall.demo.config.FileConfig;
 import com.shoppingmall.demo.domain.Category;
 import com.shoppingmall.demo.domain.Pagination;
-
+import com.shoppingmall.demo.domain.Review;
+import com.shoppingmall.demo.service.ReviewService;
 @Controller
 public class ProductController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -39,6 +40,9 @@ public class ProductController {
 	
 	@Autowired
 	CategoryService categoryservice;
+	
+	@Autowired
+	ReviewService reviewservice;
 	
 	@Autowired
 	@Qualifier("fileConfig")
@@ -221,11 +225,30 @@ public class ProductController {
 	
 	@GetMapping("/productDetail")
 	public String productDetail(@RequestParam("pId") int pId, Model model) {
-		// pId에 해당하는 상품 정보 조회
+		// HomeUI에서 카테고리 정보 전달
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+		
+		// 상품 정보 조회
 		Product product = productservice.selectProductPid(pId);
 		
-		// 상품 정보 모델에 추가
+		// 리뷰 목록 조회
+		List<Review> reviews = reviewservice.ListReviewByPid(pId);
+		
+		// 평균 평점 계산
+		double averageScore = 0.0;
+		if (!reviews.isEmpty()) {
+			averageScore = reviews.stream()
+				.mapToInt(Review::getrScore)
+				.average()
+				.orElse(0.0);
+		}
+		
+		// 모델에 데이터 추가
 		model.addAttribute("product", product);
+		model.addAttribute("reviews", reviews);
+		model.addAttribute("averageScore", String.format("%.1f", averageScore));
+		model.addAttribute("reviewCount", reviews.size());
 		
 		// 상세 페이지로 이동
 		return "/productDetail";
