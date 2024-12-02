@@ -80,29 +80,20 @@
 
     <!-- 주문 조회 (단일) -->
     <select id="selectOrderById" parameterType="string" resultMap="OrderMap">
-        SELECT  o.o_id,
-                o.o_info,
-                o.o_datetime,
-                o.o_address,
-                u.u_id,
-                u.u_name
-        FROM    orders o
-        JOIN    users u ON o.u_id = u.u_id
-        WHERE   o.o_id = #{oId}
+        SELECT o.*, u.u_name, u.u_id
+        FROM orders o
+        JOIN users u ON o.u_id = u.u_id
+        WHERE o.o_id = #{oId}
     </select>
 
     <!-- 주문 상세 조회 -->
     <select id="selectOrderDetailsByOrderId" parameterType="string" resultMap="OrderDetailMap">
-        SELECT  od.od_id,
-                od.o_id,
-                od.p_id,
-                od.od_count,
-                od.od_price,
-                p.p_name,
-                p.p_price
-        FROM    order_detail od
-        JOIN    product p ON od.p_id = p.p_id
-        WHERE   od.o_id = #{oId}
+        SELECT od.*, o.*, p.*, u.u_name
+        FROM order_detail od
+        JOIN orders o ON od.o_id = o.o_id
+        JOIN product p ON od.p_id = p.p_id
+        JOIN users u ON o.u_id = u.u_id
+        WHERE od.o_id = #{oId}
     </select>
 
     <!-- 사용자별 주문 목록 조회 -->

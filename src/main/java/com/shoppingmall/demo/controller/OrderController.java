@@ -331,4 +331,42 @@ public class OrderController {
             return ResponseEntity.badRequest().body("error");
         }
     }
+
+    @GetMapping("/admin/detail")
+    public String getOrderDetail(@RequestParam("oId") String oId, Model model) {
+        logger.debug("Fetching order details for oId: {}", oId);
+        
+        try {
+            // 주문 기본 정보 조회
+            Orders order = orderservice.selectOrderById(oId);
+            if (order == null) {
+                logger.error("Order not found for oId: {}", oId);
+                return "error/404";
+            }
+            
+            // 주문 상세 정보 조회
+            List<OrderDetail> orderDetails = orderservice.selectOrderDetailsByOrderId(oId);
+            if (orderDetails == null || orderDetails.isEmpty()) {
+                logger.error("Order details not found for oId: {}", oId);
+                return "error/404";
+            }
+            
+            // 총 주문 금액 계산
+            int totalAmount = orderDetails.stream()
+                    .mapToInt(detail -> detail.getOdPrice())
+                    .sum();
+            
+            logger.debug("Order found: {}, Details count: {}, Total amount: {}", 
+                        order.getoId(), orderDetails.size(), totalAmount);
+            
+            model.addAttribute("order", order);
+            model.addAttribute("orderDetails", orderDetails);
+            model.addAttribute("totalAmount", totalAmount);
+            
+            return "/order/orderDetailModal";
+        } catch (Exception e) {
+            logger.error("Error while fetching order details: ", e);
+            return "error/500";
+        }
+    }
 }

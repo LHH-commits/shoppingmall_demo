@@ -58,14 +58,40 @@
 </nav>
 
 <script>
-// 체크박스 전체 선택/해제
-document.getElementById('checkAll').addEventListener('change', function() {
-    document.querySelectorAll('.chkOrder').forEach(checkbox => {
-        checkbox.checked = this.checked;
+$(document).ready(function() {
+    // 전체 선택 체크박스 이벤트
+    $('#checkAll').on('change', function() {
+        const isChecked = $(this).prop('checked');
+        $('.chkOrder').prop('checked', isChecked);
     });
+    
+    // 개별 체크박스 이벤트
+    $('.chkOrder').on('change', function() {
+        const totalCheckboxes = $('.chkOrder').length;
+        const checkedCheckboxes = $('.chkOrder:checked').length;
+        $('#checkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+    });
+
+    var orderDetailModal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
 });
 
 function openOrderDetail(oId) {
-    window.location.href = `/order/admin/detail/${oId}`;
+    $.ajax({
+        url: '/order/admin/detail',
+        type: 'GET',
+        data: { oId: oId },
+        success: function(response) {
+            if (response.includes("error")) {
+                alert('주문 정보를 불러올 수 없습니다.');
+                return;
+            }
+            $('#orderDetailModal .modal-body').html(response);
+            $('#orderDetailModal').modal('show');
+        },
+        error: function(error) {
+            console.error('Error:', error);
+            alert('주문 상세 정보를 불러오는 중 오류가 발생했습니다.');
+        }
+    });
 }
 </script>
