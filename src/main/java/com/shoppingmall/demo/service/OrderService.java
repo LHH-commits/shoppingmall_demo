@@ -1,6 +1,7 @@
 package com.shoppingmall.demo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.shoppingmall.demo.domain.OrderDetail;
 import com.shoppingmall.demo.domain.Orders;
@@ -38,4 +39,13 @@ public interface OrderService {
 
     // 사용자별 주문 목록 상세 조회
     public List<OrderDetail> selectOrdersWithDetailsByUId(String uId);
-}
+
+    // 관리자용 전체 주문 목록 조회
+    public List<OrderDetail> getOrderList(Map<String, Object> params);
+
+    // 전체 주문 수 조회 (페이징용)
+    public int getOrderCount();
+
+    // 주문 배송상태 업데이트
+    public void updateOrderStatus(OrderDetail orderDetail);
+}   

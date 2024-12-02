@@ -27,6 +27,7 @@ import com.shoppingmall.demo.service.ReviewService;
 import com.shoppingmall.demo.service.UserService;
 import com.shoppingmall.demo.service.OrderService;
 
+import com.shoppingmall.demo.domain.Pagination;
 import com.shoppingmall.demo.domain.Payment;
 import com.shoppingmall.demo.domain.Review;
 import com.shoppingmall.demo.domain.Cart;
@@ -277,6 +278,57 @@ public class OrderController {
         } catch (Exception e) {
             logger.error("주문 정보 수정 중 오류 발생: ", e);
             return "redirect:/order/detail/" + orderId + "?error=true";
+        }
+    }
+
+    /*------------------------------------------------------- */
+    // 관리자용 주문 관리 페이지
+    @GetMapping("/admin/order")
+    public String adminOrderManagement() {
+        return "/order/adminOrder";
+    }
+    
+    // 관리자용 주문 목록 조회 (Ajax 요청 처리)
+    @GetMapping("/admin/orderList")
+    public String getAdminOrderList(
+            @RequestParam(defaultValue = "1") int page,
+            Model model) {
+        
+        // Pagination 객체 생성 및 설정
+        Pagination pagination = new Pagination();
+        pagination.setPage(page);
+        pagination.setCount(orderservice.getOrderCount());
+        pagination.build();  // 페이지네이션 계산
+        
+        // 파라미터 설정
+        Map<String, Object> params = new HashMap<>();
+        params.put("pagination", pagination);
+        
+        List<OrderDetail> orders = orderservice.getOrderList(params);
+        model.addAttribute("orders", orders);
+        model.addAttribute("pagination", pagination);
+        
+        return "/order/orderList";
+    }
+    
+    // 관리자용 주문 상태 업데이트
+    @PostMapping("/admin/updateStatus")
+    @ResponseBody
+    public ResponseEntity<String> updateOrderStatus(
+            @RequestParam("orderIds") String orderIds,
+            @RequestParam("status") String status) {
+        try {
+            String[] ids = orderIds.split(",");
+            for (String id : ids) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setoId(id);
+                orderDetail.setOdDeliveryStatus(status);
+                orderservice.updateOrderStatus(orderDetail);
+            }
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            logger.error("주문 상태 업데이트 중 오류 발생: ", e);
+            return ResponseEntity.badRequest().body("error");
         }
     }
 }

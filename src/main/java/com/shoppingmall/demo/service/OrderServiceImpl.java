@@ -1,8 +1,10 @@
 package com.shoppingmall.demo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.shoppingmall.demo.domain.OrderDetail;
@@ -68,5 +70,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetail> selectOrdersWithDetailsByUId(String uId) {
         return ordermapper.selectOrdersWithDetailsByUId(uId);
+    }
+
+    @Override
+    public List<OrderDetail> getOrderList(Map<String, Object> params) {
+        return ordermapper.getOrderList(params);
+    }
+
+    @Override
+    public int getOrderCount() {
+        return ordermapper.getOrderCount();
+    }
+
+    @Override
+    public void updateOrderStatus(OrderDetail orderDetail) {
+        ordermapper.updateOrderStatus(orderDetail);
     }
 }

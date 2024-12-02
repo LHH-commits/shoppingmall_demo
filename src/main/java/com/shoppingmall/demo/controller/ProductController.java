@@ -146,6 +146,10 @@ public class ProductController {
 	@PostMapping("/admin/deleteProduct")
 	public String deleteProduct(@RequestParam("pIds") List<Integer> pIds) {
 		for(int pId : pIds) {
+			// 해당 상품에 달린 리뷰 삭제
+			reviewservice.deleteReviewByPid(pId);
+
+			// 해당 상품 삭제
 			productservice.deleteProduct(pId);
 		}
 		

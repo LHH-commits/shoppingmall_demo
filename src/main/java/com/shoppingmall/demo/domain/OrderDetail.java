@@ -9,10 +9,17 @@ public class OrderDetail {
     private int pId;
     private int odCount;    // 주문 상품 수량(개수)
     private int odPrice;    // 주문 상품 가격(총액)
+    private String odDeliveryStatus;    // 배송상태
     private Orders orders;
     private Product product;
     private Payment payment;
     
+    public String getOdDeliveryStatus() {
+        return odDeliveryStatus;
+    }
+    public void setOdDeliveryStatus(String odDeliveryStatus) {
+        this.odDeliveryStatus = odDeliveryStatus;
+    }
     public int getOdId() {
         return odId;
     }
