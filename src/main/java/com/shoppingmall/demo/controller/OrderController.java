@@ -132,11 +132,21 @@ public class OrderController {
         order.setoId(oId);
         
         try {
+            // 장바구니 상품들의 총액 계산
+            List<Cart> cartItems = cartservice.selectCartList(user.getuId());
+            int totalPrice = 0;
+            
+            for (Cart cart : cartItems) {
+                totalPrice += cart.getProduct().getpPrice() * cart.getCartAmount();
+            }
+            
+            // 총액 설정
+            order.setTotalPrice(totalPrice);
+
             // 주문 생성
             orderservice.insertOrder(order);
             
             // 장바구니 상품들을 주문상세에 추가
-            List<Cart> cartItems = cartservice.selectCartList(user.getuId());
             for (Cart cart : cartItems) {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setoId(oId);
@@ -152,8 +162,6 @@ public class OrderController {
             // 생성된 주문 ID를 응답으로 전송
             Map<String, String> response = new HashMap<>();
             response.put("oId", oId);
-            
-            logger.debug("Response payload: {}", response);  // 응답 데이터 로깅
             
             return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -4,16 +4,16 @@ import com.shoppingmall.demo.domain.Product;
 import com.shoppingmall.demo.domain.Users;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Date;
 public class Orders {
 	private String oId;
 	private String oInfo;
-	private String oDatetime;
+	private Date oDatetime;
 	private String oAddress;
 	private String uId;
 	private Users user;
 	private Product product;
-
+	private int totalPrice;
 	
 	private Payment payment;
 	private List<OrderDetail> orderDetails;
@@ -26,6 +26,12 @@ public class Orders {
 	
 	private LocalDateTime paymentTime;
 	
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 	public String getoId() {
 		return oId;
 	}
@@ -38,10 +44,10 @@ public class Orders {
 	public void setoInfo(String oInfo) {
 		this.oInfo = oInfo;
 	}
-	public String getoDatetime() {
+	public Date getoDatetime() {
 		return oDatetime;
 	}
-	public void setoDatetime(String oDatetime) {
+	public void setoDatetime(Date oDatetime) {
 		this.oDatetime = oDatetime;
 	}
 	public String getoAddress() {

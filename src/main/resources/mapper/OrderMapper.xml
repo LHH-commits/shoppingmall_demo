@@ -9,6 +9,7 @@
         <result property="oDatetime" column="o_datetime"/>
         <result property="oAddress" column="o_address"/>
         <result property="uId" column="u_id"/>
+        <result property="totalPrice" column="total_price"/>
         
         <!-- Users 연관 매핑 -->
         <association property="user" javaType="Users">
@@ -53,13 +54,15 @@
             o_info,
             o_datetime,
             o_address,
-            u_id
+            u_id,
+            total_price
         ) VALUES (
             #{oId},
             #{oInfo},
             NOW(),
             #{oAddress},
-            #{uId}
+            #{uId},
+            #{totalPrice}
         )
     </insert>
 
@@ -176,31 +179,20 @@
 
     <!-- 관리자용 전체 주문 목록 조회 -->
     <select id="getOrderList" parameterType="map" resultMap="OrderDetailMap">
-        SELECT  o.o_id,
-                o.o_info,
-                o.o_datetime,
-                o.o_address,
-                od.od_id,
-                od.od_count,
-                od.od_price,
-                od.od_delivery_status,   -- 배송상태 추가
-                p.p_id,
-                p.p_name,
-                p.p_imgpath,
-                p.p_price,
-                pm.payment_id,
-                pm.status,
-                pm.payment_type,
-                pm.payment_time,
-                u.u_name              -- 주문자 이름 추가
-        FROM    orders o
-        JOIN    order_detail od ON o.o_id = od.o_id
-        JOIN    product p ON od.p_id = p.p_id
-        JOIN    users u ON o.u_id = u.u_id
-        LEFT JOIN payment pm ON o.o_id = pm.o_id
-        ORDER BY o.o_datetime DESC
-        LIMIT #{pagination.startIndex}, #{pagination.perPage}
-    </select>
+    SELECT  o.o_id,
+            o.o_info,
+            o.o_datetime,
+            o.o_address,
+            o.total_price,
+            od.od_delivery_status,
+            u.u_name
+    FROM    orders o
+    JOIN    users u ON o.u_id = u.u_id
+    LEFT JOIN order_detail od ON o.o_id = od.o_id
+    GROUP BY o.o_id
+    ORDER BY o.o_datetime DESC
+    LIMIT #{pagination.startIndex}, #{pagination.perPage}
+</select>
 
     <!-- 전체 주문 수 조회 (페이징용) -->
     <select id="getOrderCount" resultType="int">

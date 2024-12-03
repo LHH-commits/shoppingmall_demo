@@ -58,9 +58,13 @@ public class PaymentController {
             return "redirect:/order/list";
         }
         
+        // 총 주문 금액 계산
+        int totalPrice = orders.getTotalPrice(); // orders 테이블에 저장된 총액 사용
+
         model.addAttribute("user", user);
         model.addAttribute("orders", orders);
         model.addAttribute("orderDetail", orderDetails.get(0));
+        model.addAttribute("totalPrice", totalPrice);
         
         return "/payment/checkout";
     }

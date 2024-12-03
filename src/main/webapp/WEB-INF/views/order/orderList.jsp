@@ -21,11 +21,10 @@
             <c:forEach var="order" items="${orders}">
                 <tr>
                     <td><input type="checkbox" class="form-check-input chkOrder" value="${order.oId}"></td>
-                    <td><fmt:parseDate value="${order.orders.oDatetime}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate" />
-                    <fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                    <td><fmt:formatDate value="${order.orders.oDatetime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                     <td>${order.oId}</td>
                     <td>${order.orders.user.uName}</td>
-                    <td><fmt:formatNumber value="${order.odPrice}" pattern="#,###"/>원</td>
+                    <td><fmt:formatNumber value="${order.orders.totalPrice}" pattern="#,###"/>원</td>
                     <td>${order.odDeliveryStatus}</td>
                     <td>
                         <button class="btn btn-sm btn-success" onclick="openOrderDetail('${order.oId}')">상세</button>

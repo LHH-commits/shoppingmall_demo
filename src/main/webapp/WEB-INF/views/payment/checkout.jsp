@@ -33,7 +33,7 @@
         // 실제 주문 금액 설정
         await widgets.setAmount({
           currency: "KRW",
-          value: Number(${orderDetail.odPrice})
+          value: Number(${totalPrice})
         });
 
         await Promise.all([

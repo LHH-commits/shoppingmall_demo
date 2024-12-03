@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div class="container mt-5">
-	<h2 class="text-center mt-3 mb-3">카테고리 관리</h2>
+	<h2 class="text-center mt-3 mb-3">상품 관리</h2>
 		<!-- 업데이트가 반영될 상품 테이블 -->
 		<div id="productTable"></div>
 		
