@@ -22,64 +22,89 @@
         FROM 
             orders o
         WHERE 
-            o.o_datetime BETWEEN #{startDate} AND #{endDate}
+            (#{startDate} IS NULL OR o.o_datetime &gt;= #{startDate})
+            AND (#{endDate} IS NULL OR o.o_datetime &lt;= #{endDate})
         GROUP BY 
             DATE(o.o_datetime)
         ORDER BY 
             orderDate
     </select>
 
-    <!-- 카테고리별 판매 통계 (계층형 구조) -->
+    <!-- 카테고리별 판매 통계 -->
     <select id="getSalesStatsByCategory" parameterType="map" resultType="map">
         WITH RECURSIVE CategoryHierarchy AS (
+            -- 초기 선택: 최하위 카테고리부터 시작
             SELECT 
-                c.category_id,
-                c.category_name,
-                c.parent_id,
-                CAST(c.category_name AS CHAR(1000)) as category_path
-            FROM 
-                category c
-            WHERE 
-                c.category_id = #{categoryId}
+                c1.category_id,
+                c1.category_name,
+                c1.parent_id,
+                CAST(c1.category_name AS CHAR(1000)) as category_name_path,
+                CAST(c1.category_id AS CHAR(1000)) as category_id_path,
+                1 as level
+            FROM category c1
+            WHERE c1.category_id IN (
+                SELECT p.category_id 
+                FROM product p
+            )
             
             UNION ALL
             
+            -- 재귀: 상위 카테고리로 이동하며 경로 구성
             SELECT 
-                c.category_id,
-                c.category_name,
-                c.parent_id,
-                CONCAT(ch.category_path, '>', c.category_name)
+                c2.category_id,
+                c2.category_name,
+                c2.parent_id,
+                CONCAT(c2.category_name, ' > ', ch.category_name_path),
+                CONCAT(c2.category_id, ',', ch.category_id_path),
+                ch.level + 1
             FROM 
-                category c
-            INNER JOIN 
-                CategoryHierarchy ch ON c.parent_id = ch.category_id
+                category c2
+                INNER JOIN CategoryHierarchy ch ON ch.parent_id = c2.category_id
+        ),
+        FullPath AS (
+            SELECT 
+                ch.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY ch.category_id 
+                    ORDER BY ch.level DESC
+                ) as rn
+            FROM CategoryHierarchy ch
         )
         SELECT 
             p.p_id,
             p.p_name,
             p.p_price,
-            ch.category_path,
-            SUM(od.od_count) as totalQuantity,
-            SUM(od.od_price) as totalAmount,
-            COALESCE(AVG(r.r_rating), 0) as avgRating
+            fp.category_name_path,
+            IFNULL(SUM(od.od_count), 0) as totalQuantity,
+            IFNULL(SUM(od.od_price), 0) as totalAmount,
+            COALESCE(AVG(r.r_score), 0) as avgRating,
+            RANK() OVER (ORDER BY IFNULL(SUM(od.od_price), 0) DESC) as rank
         FROM 
-            orders o
-            JOIN order_detail od ON o.o_id = od.o_id
-            JOIN product p ON od.p_id = p.p_id
+            product p
             JOIN category c ON p.category_id = c.category_id
-            JOIN CategoryHierarchy ch ON c.category_id = ch.category_id
+            JOIN FullPath fp ON c.category_id = fp.category_id AND fp.rn = 1
+            LEFT JOIN order_detail od ON p.p_id = od.p_id
+            LEFT JOIN orders o ON od.o_id = o.o_id
             LEFT JOIN review r ON p.p_id = r.p_id
-        WHERE 
-            o.o_datetime BETWEEN #{startDate} AND #{endDate}
+        <where>
+            <if test="startDate != null and startDate != ''">
+                AND o.o_datetime &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND o.o_datetime &lt;= #{endDate}
+            </if>
             <if test="categoryId != null">
-                AND c.category_id IN (
-                    SELECT category_id FROM CategoryHierarchy
+                AND (
+                    c.category_id = #{categoryId}
+                    OR c.parent_id = #{categoryId}
+                    OR fp.category_id_path LIKE CONCAT('%,', #{categoryId}, ',%')
                 )
             </if>
+        </where>
         GROUP BY 
-            p.p_id, ch.category_path
+            p.p_id, p.p_name, p.p_price, fp.category_name_path, fp.level
         ORDER BY 
-            totalAmount DESC
+            totalAmount DESC, p.p_name
     </select>
 
     <!-- 상품별 판매 순위 -->
@@ -93,7 +118,8 @@
             JOIN order_detail od ON o.o_id = od.o_id
             JOIN product p ON od.p_id = p.p_id
         WHERE 
-            o.o_datetime BETWEEN #{startDate} AND #{endDate}
+            (#{startDate} IS NULL OR o.o_datetime &gt;= #{startDate})
+            AND (#{endDate} IS NULL OR o.o_datetime &lt;= #{endDate})
         GROUP BY 
             p.p_id
         ORDER BY 
@@ -110,7 +136,8 @@
         FROM 
             orders o
         WHERE 
-            o.o_datetime BETWEEN #{startDate} AND #{endDate}
+            (#{startDate} IS NULL OR o.o_datetime &gt;= #{startDate})
+            AND (#{endDate} IS NULL OR o.o_datetime &lt;= #{endDate})
         GROUP BY 
             DATE(o.o_datetime)
         ORDER BY 

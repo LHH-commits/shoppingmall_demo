@@ -23,18 +23,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.shoppingmall.demo.service.CategoryService;
 import com.shoppingmall.demo.domain.Category;
 
 @Controller
+@RequestMapping("/admin")
 public class CategoryController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	CategoryService categoryservice;
 	
-	@GetMapping("/admin/category")
+	@GetMapping("/category")
 	public String manageCategory(Model model) {
 		List<Category> tierCategory = categoryservice.selectTierCategory();
 		
@@ -47,7 +49,7 @@ public class CategoryController {
 		return "/adminCategory";
 	}
 	
-	@PostMapping("/admin/insertCategory")
+	@PostMapping("/insertCategory")
 	public String insertCategory(@ModelAttribute Category category) {
 		if (category.getParentId() == null || category.getParentId() == 0) {
 			category.setParentId(null);
@@ -60,7 +62,7 @@ public class CategoryController {
 	
 	// 카테고리 수정
 	@Secured({"ROLE_ADMIN"})
-	@GetMapping("/admin/editCategory")
+	@GetMapping("/editCategory")
 	public String editCategory(@RequestParam("cateId") int cateId, Model model) {
 		Category category = categoryservice.selectCategoryById(cateId);
 	    List<Category> tierCategory = categoryservice.selectTierCategory();
@@ -76,7 +78,7 @@ public class CategoryController {
 		return "/edit_category";
 	}
 	
-	@PostMapping("/admin/updateCategory")
+	@PostMapping("/updateCategory")
 	public String updateCategory(@ModelAttribute Category category) {
 		/*
 		 * // 선택한 카테고리의 ID를 parentId로 설정 if (category.getParentId() != null) { // 이동하려는
@@ -88,7 +90,7 @@ public class CategoryController {
 		return "redirect:/admin/category";
 	}
 	
-	@PostMapping("/admin/deleteCategory")
+	@PostMapping("/deleteCategory")
 	public String deleteCategory(@RequestParam("cateId") int cateId) {
 		categoryservice.deleteCategory(cateId);
 		
@@ -109,4 +111,13 @@ public class CategoryController {
         // options.jsp를 렌더링하여 HTML 옵션 태그들만 반환
         return "/category_options";
     }
+	
+	// 하위 카테고리 조회 API
+	@GetMapping("/category/sub")
+	@ResponseBody
+	public List<Category> getSubCategories(@RequestParam("parentId") Integer parentId) {
+		Map<String, Integer> params = new HashMap<>();
+		params.put("parentId", parentId);
+		return categoryservice.selectSubCategories(params);
+	}
 }
