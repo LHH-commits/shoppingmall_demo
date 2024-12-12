@@ -33,48 +33,29 @@
     <!-- 카테고리별 판매 통계 -->
     <select id="getSalesStatsByCategory" parameterType="map" resultType="map">
         WITH RECURSIVE CategoryHierarchy AS (
-            -- 초기 선택: 최하위 카테고리부터 시작
+            -- 초기 선택: 최테고리 계층 구조
             SELECT 
-                c1.category_id,
-                c1.category_name,
-                c1.parent_id,
-                CAST(c1.category_name AS CHAR(1000)) as category_name_path,
-                CAST(c1.category_id AS CHAR(1000)) as category_id_path,
-                1 as level
-            FROM category c1
-            WHERE c1.category_id IN (
-                SELECT p.category_id 
-                FROM product p
-            )
-            
-            UNION ALL
-            
-            -- 재귀: 상위 카테고리로 이동하며 경로 구성
-            SELECT 
-                c2.category_id,
-                c2.category_name,
-                c2.parent_id,
-                CONCAT(c2.category_name, ' > ', ch.category_name_path),
-                CONCAT(c2.category_id, ',', ch.category_id_path),
-                ch.level + 1
-            FROM 
-                category c2
-                INNER JOIN CategoryHierarchy ch ON ch.parent_id = c2.category_id
-        ),
-        FullPath AS (
-            SELECT 
-                ch.*,
-                ROW_NUMBER() OVER (
-                    PARTITION BY ch.category_id 
-                    ORDER BY ch.level DESC
-                ) as rn
-            FROM CategoryHierarchy ch
+                category_id,
+                parent_id
+            FROM category
+            WHERE 1=1
+            <if test="categoryId != null">
+                AND (
+                    category_id = #{categoryId}
+                    OR parent_id = #{categoryId}
+                    OR EXISTS (
+                        SELECT 1 FROM category c2 
+                        WHERE c2.parent_id = #{categoryId}
+                        AND category.parent_id = c2.category_id
+                    )
+                )
+            </if>
         )
         SELECT 
             p.p_id,
             p.p_name,
             p.p_price,
-            fp.category_name_path,
+            p.category_path,  -- product 테이블의 category_path 사용
             IFNULL(SUM(od.od_count), 0) as totalQuantity,
             IFNULL(SUM(od.od_price), 0) as totalAmount,
             COALESCE(AVG(r.r_score), 0) as avgRating,
@@ -82,7 +63,7 @@
         FROM 
             product p
             JOIN category c ON p.category_id = c.category_id
-            JOIN FullPath fp ON c.category_id = fp.category_id AND fp.rn = 1
+            LEFT JOIN CategoryHierarchy ch ON c.category_id = ch.category_id
             LEFT JOIN order_detail od ON p.p_id = od.p_id
             LEFT JOIN orders o ON od.o_id = o.o_id
             LEFT JOIN review r ON p.p_id = r.p_id
@@ -94,15 +75,11 @@
                 AND o.o_datetime &lt;= #{endDate}
             </if>
             <if test="categoryId != null">
-                AND (
-                    c.category_id = #{categoryId}
-                    OR c.parent_id = #{categoryId}
-                    OR fp.category_id_path LIKE CONCAT('%,', #{categoryId}, ',%')
-                )
+                AND ch.category_id IS NOT NULL
             </if>
         </where>
         GROUP BY 
-            p.p_id, p.p_name, p.p_price, fp.category_name_path, fp.level
+            p.p_id, p.p_name, p.p_price, p.category_path
         ORDER BY 
             totalAmount DESC, p.p_name
     </select>

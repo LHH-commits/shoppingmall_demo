@@ -79,7 +79,8 @@
                 </div>
                 
                 <div class="text-muted small mt-2">
-                    작성일: ${review.rDatetime}
+                    작성일: <fmt:formatDate value="${review.rDatetime}" 
+                        pattern="yyyy년 MM월 dd일 HH : mm" />
                 </div>
                 
                 <div class="review-actions">

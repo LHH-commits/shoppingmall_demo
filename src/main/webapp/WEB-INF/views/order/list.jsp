@@ -36,6 +36,14 @@
             background-color: #28a745;
             color: white;
         }
+        .status-shipping {
+            background-color: #007bff;
+            color: white;
+        }
+        .status-preparing {
+            background-color: #ffc107;
+            color: black;
+        }
         .product-image {
             width: 80px;
             height: 80px;
@@ -54,10 +62,14 @@
                     <div>
                         <span class="fw-bold">주문번호: ${order.oId}</span>
                         <span class="ms-3 text-muted">
-                            ${order.oDatetime}
+                            <fmt:formatDate value="${order.oDatetime}" 
+                                pattern="yyyy년 MM월 dd일 HH : mm" />
                         </span>
                     </div>
-                    <span class="status-badge status-completed">결제완료</span>
+                    <span class="status-badge ${order.orderDetails[0].odDeliveryStatus eq '배송완료' ? 'status-completed' : 
+                        order.orderDetails[0].odDeliveryStatus eq '배송중' ? 'status-shipping' : 'status-preparing'}">
+                        ${order.orderDetails[0].odDeliveryStatus}
+                    </span>
                 </div>
                 <div class="order-body">
                     <c:forEach items="${order.orderDetails}" var="detail">

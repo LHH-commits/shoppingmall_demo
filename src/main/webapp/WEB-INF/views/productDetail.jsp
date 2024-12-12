@@ -287,7 +287,7 @@
                             </span>
                         </div>
                         <div class="star-score">
-                            ${'★'.repeat(review.rScore)}${'★'.repeat(5-review.rScore)}
+                            ${'★'.repeat(review.rScore)}${'☆'.repeat(5-review.rScore)}
                             <span class="text-muted">(${review.rScore}점)</span>
                         </div>
                     </div>

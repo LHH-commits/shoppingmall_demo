@@ -17,17 +17,18 @@
 	</div>
 
 <script>
-	// .click 사용하지 말고 .on('click') 사용해라!!
-	
 	function loadProducts(page = 1) {
 		$.ajax({
-			url: '/productList?page=' + page,
+			url: '/productList',
 			type: 'GET',
+			data: { page: page },
 			success: function(response) {
-				console.log(response);
 				$('#productTable').html(response);
+			},
+			error: function(error) {
+				console.error('Error loading products:', error);
 			}
-		})
+		});
 	}
 	
 	function deleteSelectedProducts() {
@@ -63,7 +64,7 @@
 	}
 	
 	$(document).ready(function() {
-		loadProducts();
+		loadProducts(1);
 		
 		// .click사용 웬만하면 하지 말기
 		// .click은 페이지가 처음 로드되는 DOM에만 이벤트를 줄 수 있음(ajax로 불러오는 방식은 안된다)

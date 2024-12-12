@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<div id="productList">
+<div>
 	<table class="table table-hover">
 		<thead class="table-info">
 			<tr>
@@ -67,21 +67,16 @@
 </div>
 
 <script>
-	document.getElementById('checkAll').addEventListener('change', function(){
-		const isChecked = this.checked;
-		const checkboxes = document.querySelectorAll('.chkPdt');
-		
-		checkboxes.forEach(function(checkbox){
-			checkbox.checked = isChecked;
-		});
-	});
-	
-	const checkboxes = document.querySelectorAll('.chkPdt');
-	checkboxes.forEach(function(checkbox) {
-		checkbox.addEventListener('change', function(){
-			const allChecked = document.querySelectorAll('.chkPdt:checked').length === checkboxes.length;
-			document.getElementById('checkAll').checked = allChecked;
-		});
-	});
-	
+    // 전체 선택 체크박스 이벤트를 document에 위임
+    $(document).on('change', '#checkAll', function() {
+        const isChecked = $(this).prop('checked');
+        $('.chkPdt').prop('checked', isChecked);
+    });
+    
+    // 개별 체크박스 이벤트를 document에 위임
+    $(document).on('change', '.chkPdt', function() {
+        const totalCheckboxes = $('.chkPdt').length;
+        const checkedCheckboxes = $('.chkPdt:checked').length;
+        $('#checkAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+    });
 </script>
