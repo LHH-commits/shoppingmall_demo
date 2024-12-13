@@ -5,20 +5,29 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col">
-            <h2>주문 관리</h2>
+            <h2 class="mb-4">주문 관리</h2>
         </div>
     </div>
 
-    <!-- 배송상태 변경 버튼 그룹 추가 -->
-    <div class="row mb-3">
+    <!-- 배송상태 변경 버튼 그룹 수정 -->
+    <div class="row mb-4">
         <div class="col">
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="updateStatus('배송준비중')">배송준비중</button>
-                <button class="btn btn-info" onclick="updateStatus('배송중')">배송중</button>
-                <button class="btn btn-success" onclick="updateStatus('배송완료')">배송완료</button>
+                <button class="btn btn-light" onclick="updateStatus('배송준비중')">배송준비중</button>
+                <button class="btn btn-light" onclick="updateStatus('배송중')">배송중</button>
+                <button class="btn btn-light" onclick="updateStatus('배송완료')">배송완료</button>
             </div>
         </div>
     </div>
+
+    <style>
+        .btn-group .btn {
+            border: 1px solid #dee2e6;
+        }
+        .btn-group .btn:hover {
+            background-color: #e9ecef;
+        }
+    </style>
 
     <!-- 주문 목록이 로드될 영역 -->
     <div id="orderListContainer">

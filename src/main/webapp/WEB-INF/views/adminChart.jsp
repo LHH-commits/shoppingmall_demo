@@ -33,14 +33,20 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mt-3 mb-3">매출 통계</h2>
+        <h2 class="text-center mt-3 mb-3">통계/분석</h2>
         <!-- 필터 섹션 -->
         <div class="filter-section">
             <form id="statsForm">
                 <div class="row">
                     <!-- 기간 선택 -->
                     <div class="col-md-6">
-                        <label class="form-label">기간 선택</label>
+                        <div class="d-flex align-items-center mb-2">
+                            <label class="form-label mb-0">기간 선택</label>
+                            <button type="button" class="btn btn-sm btn-light ms-2" 
+                                    onclick="resetDateRange()" style="font-size: 12px;">
+                                초기화
+                            </button>
+                        </div>
                         <div class="input-group">
                             <input type="text" class="form-control datepicker" id="startDate" name="startDate">
                             <span class="input-group-text">~</span>
@@ -113,6 +119,13 @@
     <script>
         let salesChart = null;
         let quantityChart = null;
+
+        // 날짜 초기화 함수
+        function resetDateRange() {
+            $('#startDate').val('');
+            $('#endDate').val('');
+            updateCharts();  // 차트 업데이트
+        }
 
         $(document).ready(function() {
             // Datepicker 초기화

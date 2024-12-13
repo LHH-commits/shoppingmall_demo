@@ -10,6 +10,11 @@
 </head>
 <body>
 	<div class="container mt-5">
+		<div class="row">
+	        <div class="col">
+	            <h2 class="mb-4">회원 관리</h2>
+	        </div>
+	    </div>
 		<div id="userTable"></div>
 	</div>
 

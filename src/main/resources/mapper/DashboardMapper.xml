@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoppingmall.demo.mapper.DashboardMapper">
+
+    <!-- 오늘의 주문 건수-->
+    <select id="todayOrders" resultType="int">
+        SELECT COUNT(*) 
+        FROM orders o
+        WHERE DATE(o.o_datetime) = CURDATE();
+    </select>
+
+    <!-- 오늘의 매출 -->
+    <select id="todaySales" resultType="int">
+        SELECT SUM(o.total_price) 
+        FROM orders o
+        WHERE DATE(o.o_datetime) = CURDATE();
+    </select>
+
+    <!-- 신규 회원 수 -->
+    <select id="newMembers" resultType="int">
+        SELECT COUNT(*)
+        FROM users u
+        WHERE DATE(u.u_datetime) = CURDATE();
+    </select>
+
+    <!-- 최근 일주일 매출 추이 -->
+    <select id="weeklySales" resultType="int">
+        SELECT SUM(o.total_price)
+        FROM orders o
+        WHERE o.o_datetime BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE();
+    </select>
+
+    <!-- 인기 상품 TOP 5 -->
+    <select id="topProducts" resultType="Product">
+        SELECT 
+            p.p_name,
+            COUNT(od.od_id) as orderCount,
+            SUM(od.od_price) as totalSales
+        FROM product p
+        JOIN order_detail od ON p.p_id = od.p_id
+        JOIN orders o ON od.o_id = o.o_id
+        WHERE o.o_datetime &gt;= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        GROUP BY p.p_id, p.p_name
+        ORDER BY totalSales DESC
+        LIMIT 5
+    </select>
+
+    <!-- 최근 주문 내역 -->
+    <select id="recentOrders" resultType="map">
+        SELECT 
+            o.o_id,
+            o.o_datetime,
+            u.u_name,
+            o.total_price,
+            od.od_delivery_status
+        FROM orders o
+        JOIN users u ON o.u_id = u.u_id
+        JOIN order_detail od ON o.o_id = od.o_id
+        ORDER BY o.o_datetime DESC
+        LIMIT 5
+    </select>
+
+</mapper>
