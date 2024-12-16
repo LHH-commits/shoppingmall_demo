@@ -27,10 +27,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.shoppingmall.demo.service.CategoryService;
 import com.shoppingmall.demo.service.ProductService;
 import com.shoppingmall.demo.service.UserService;
+import com.shoppingmall.demo.service.DashboardService;
 import com.shoppingmall.demo.domain.Users;
 import com.shoppingmall.demo.domain.Category;
 import com.shoppingmall.demo.domain.Pagination;
 import com.shoppingmall.demo.domain.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 public class UserController {
@@ -38,12 +41,18 @@ public class UserController {
 
 	@Autowired 
 	UserService userservice;
+
 	@Autowired
 	ProductService productservice;
+	
 	@Autowired
 	CategoryService categoryservice;
+	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	DashboardService dashboardservice;
 	
 	@GetMapping("/")
 	public String home() {
@@ -92,7 +101,16 @@ public class UserController {
 	}
 	
 	@GetMapping("/admin/main")
-	public String adminMainPage(Model model) {
+	public String adminMainPage(Model model) throws JsonProcessingException {
+		model.addAttribute("todayOrders", dashboardservice.todayOrders());
+		model.addAttribute("todaySales", dashboardservice.todaySales());
+		model.addAttribute("newMembers", dashboardservice.newMembers());
+		ObjectMapper mapper = new ObjectMapper();
+		String weeklySalesJson = mapper.writeValueAsString(dashboardservice.weeklySales());
+		model.addAttribute("weeklySales", weeklySalesJson);
+		model.addAttribute("topProducts", dashboardservice.topProducts());
+		model.addAttribute("recentOrders", dashboardservice.recentOrders());
+		model.addAttribute("recentNotices", dashboardservice.recentNotices());
 		return "/adminMain";
 	}
 	

@@ -2,51 +2,93 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shoppingmall.demo.mapper.DashboardMapper">
 
+    <resultMap id="DashboardMap" type="Dashboard">
+        <!-- 일일 통계 -->
+        <result property="todayOrders" column="today_orders"/>
+        <result property="todaySales" column="today_sales"/>
+        <result property="newMembers" column="new_members"/>
+        
+        <!-- 주문 정보 -->
+        <result property="oId" column="o_id"/>
+        <result property="oDatetime" column="o_datetime"/>
+        <result property="uName" column="u_name"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="odDeliveryStatus" column="od_delivery_status"/>
+        
+        <!-- 상품 정보 -->
+        <result property="pName" column="p_name"/>
+        <result property="pPrice" column="p_price"/>
+        <result property="catePath" column="category_path"/>
+        <result property="odCount" column="od_count"/>
+        <result property="odPrice" column="od_price"/>
+        
+        <!-- 공지사항 정보 -->
+        <result property="bId" column="b_id"/>
+        <result property="bTitle" column="b_title"/>
+        <result property="bDatetime" column="b_datetime"/>
+        <result property="bViews" column="b_views"/>
+        <result property="bWriter" column="b_writer"/>
+    </resultMap>
+
+    <!-- 매출 통계용 resultMap 추가 -->
+    <resultMap id="SalesStatsMap" type="map">
+        <result property="date" column="sale_date"/>
+        <result property="count" column="order_count"/>
+        <result property="sales" column="total_sales"/>
+    </resultMap>
+
     <!-- 오늘의 주문 건수-->
-    <select id="todayOrders" resultType="int">
-        SELECT COUNT(*) 
+    <select id="todayOrders" resultMap="DashboardMap">
+        SELECT COUNT(*) as today_orders
         FROM orders o
         WHERE DATE(o.o_datetime) = CURDATE();
     </select>
 
     <!-- 오늘의 매출 -->
-    <select id="todaySales" resultType="int">
-        SELECT SUM(o.total_price) 
+    <select id="todaySales" resultMap="DashboardMap">
+        SELECT IFNULL(SUM(o.total_price), 0) as today_sales
         FROM orders o
         WHERE DATE(o.o_datetime) = CURDATE();
     </select>
 
     <!-- 신규 회원 수 -->
-    <select id="newMembers" resultType="int">
-        SELECT COUNT(*)
+    <select id="newMembers" resultMap="DashboardMap">
+        SELECT COUNT(*) as new_members
         FROM users u
         WHERE DATE(u.u_datetime) = CURDATE();
     </select>
 
-    <!-- 최근 일주일 매출 추이 -->
-    <select id="weeklySales" resultType="int">
-        SELECT SUM(o.total_price)
+    <!-- 최근 일주일 매출 추이 수정 -->
+    <select id="weeklySales" resultMap="SalesStatsMap">
+        SELECT 
+            DATE_FORMAT(o.o_datetime, '%Y-%m-%d') as sale_date,
+            COUNT(DISTINCT o.o_id) as order_count,
+            IFNULL(SUM(o.total_price), 0) as total_sales
         FROM orders o
-        WHERE o.o_datetime BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE();
+        WHERE o.o_datetime BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()
+        GROUP BY DATE(o.o_datetime)
+        ORDER BY sale_date ASC;
     </select>
 
-    <!-- 인기 상품 TOP 5 -->
-    <select id="topProducts" resultType="Product">
+    <!-- 인기 상품 TOP 5 수정 -->
+    <select id="topProducts" resultMap="DashboardMap">
         SELECT 
             p.p_name,
-            COUNT(od.od_id) as orderCount,
-            SUM(od.od_price) as totalSales
+            p.p_price,
+            COUNT(od.od_id) as od_count,
+            SUM(od.od_price) as od_price,
+            p.category_path as catePath
         FROM product p
         JOIN order_detail od ON p.p_id = od.p_id
         JOIN orders o ON od.o_id = o.o_id
         WHERE o.o_datetime &gt;= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-        GROUP BY p.p_id, p.p_name
-        ORDER BY totalSales DESC
+        GROUP BY p.p_id, p.p_name, p.p_price, p.category_path
+        ORDER BY od_price DESC
         LIMIT 5
     </select>
 
     <!-- 최근 주문 내역 -->
-    <select id="recentOrders" resultType="map">
+    <select id="recentOrders" resultMap="DashboardMap">
         SELECT 
             o.o_id,
             o.o_datetime,
@@ -56,7 +98,22 @@
         FROM orders o
         JOIN users u ON o.u_id = u.u_id
         JOIN order_detail od ON o.o_id = od.o_id
+        GROUP BY o.o_id
         ORDER BY o.o_datetime DESC
+        LIMIT 5
+    </select>
+
+    <!-- 최근 공지사항 목록 -->
+    <select id="recentNotices" resultMap="DashboardMap">
+        SELECT 
+            b.b_id,
+            b.b_title,
+            b.b_datetime,
+            b.b_views,
+            b.b_writer
+        FROM board b
+        WHERE b.b_type = 'NOTICE'
+        ORDER BY b.b_datetime DESC
         LIMIT 5
     </select>
 
