@@ -65,7 +65,9 @@
             COUNT(DISTINCT o.o_id) as order_count,
             IFNULL(SUM(o.total_price), 0) as total_sales
         FROM orders o
-        WHERE o.o_datetime BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()
+        WHERE o.o_datetime BETWEEN 
+            DATE_SUB(CURDATE(), INTERVAL 6 DAY) 
+            AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
         GROUP BY DATE(o.o_datetime)
         ORDER BY sale_date ASC;
     </select>

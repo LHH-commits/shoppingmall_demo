@@ -179,17 +179,30 @@
         // 변환된 데이터 확인용 로그
         console.log('Parsed sales data:', salesData);
         
+        // 날짜 포맷팅 함수
+        function formatDate(dateStr) {
+            console.log('Input dateStr:', dateStr);  // 입력값 확인
+            const [year, month, day] = dateStr.split('-');
+            console.log('Split result:', { year, month, day });  // 분리된 값 확인
+            
+            // 문자열 연결 연산자를 사용
+            const formattedDate = parseInt(month) + "월 " + parseInt(day) + "일";
+            console.log('Formatted result:', formattedDate);  // 최종 결과 확인
+            
+            return formattedDate;
+        }
+        
         // 최근 7일 매출 추이 차트
         const ctx = document.getElementById('salesChart').getContext('2d');
+        
+        // 데이터 매핑 결과 확인
+        const chartLabels = salesData.map(item => formatDate(item.date));
+        console.log('Chart labels:', chartLabels);
         
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: salesData.map(item => {
-                    // 날짜 포맷 변경 (예: 12월 11일)
-                    const [year, month, day] = item.date.split('-');
-                    return `${month}월 ${day}일`;
-                }),
+                labels: chartLabels,
                 datasets: [{
                     label: '일일 매출',
                     data: salesData.map(item => item.sales),
@@ -218,6 +231,22 @@
                     title: {
                         display: true,
                         text: '최근 7일간 매출 및 주문 현황'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.dataset.label === '일일 매출' 
+                                        ? new Intl.NumberFormat('ko-KR').format(context.parsed.y) + '원'
+                                        : context.parsed.y + '건';
+                                }
+                                return label;
+                            }
+                        }
                     }
                 },
                 scales: {
@@ -229,7 +258,12 @@
                             display: true,
                             text: '매출액 (원)'
                         },
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('ko-KR').format(value) + '원';
+                            }
+                        }
                     },
                     y1: {
                         type: 'linear',
@@ -242,7 +276,13 @@
                         grid: {
                             drawOnChartArea: false
                         },
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value + '건';
+                            }
+                        }
                     }
                 }
             }

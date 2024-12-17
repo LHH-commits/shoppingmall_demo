@@ -2,6 +2,7 @@ package com.shoppingmall.demo.controller;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,13 +66,23 @@ public class UserController {
 	}
 	
 	@GetMapping("/loginSuccess")
-	public String loginSuccessPage( Authentication authentication) {
+	public String loginSuccessPage(Authentication authentication, Model model) {
 		// 디버그 확인용 코드
 		logger.info("User Authorities: {}", authentication.getAuthorities());
+		
 		// 관리자 권한이라면 /index 페이지를 보여준다
 		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
 			return "/index";
 		}
+		
+		// 일반 사용자인 경우 카테고리 목록을 함께 전달
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+		
+		// 상품 목록도 함께 가져오기
+		List<Product> pList = productservice.getAllProducts();
+		model.addAttribute("pList", pList);
+		
 		return "/userHome";
 	}
 	
@@ -147,7 +158,7 @@ public class UserController {
 		model.addAttribute("pList", pList);
 		
 		return "/userHome";
-}
+	}
 	
 	@GetMapping("/admin/users")
 	public String manageUsers(Model model) {

@@ -14,22 +14,28 @@
 	.logo-link {
 		text-decoration: none;
 	}
+	/* 현재 페이지 메뉴 스타일 */
+	.nav-link.active {
+		border-bottom: 2px solid white;
+	}
+	.nav-link.active-main {
+		border-bottom: 2px solid #6c757d;  /* text-secondary 색상과 동일 */
+	}
 </style>
 </head>
 <body>
 <header>
 	<div class="px-3 py-1 bg-dark mb-0">
-      <div class="container d-flex flex-wrap justify-content-center align-items-center">
-      <div class="d-flex align-items-center">
-          <a href="/admin/main" class="logo-link"><h4 class="text-white mb-0">쇼핑몰 관리자</h4></a> <!-- 로고 텍스트 -->
-        </div>
-        <form class="col-6 col-lg-auto mb-lg-0 me-lg-auto ms-5">
-          <input type="search" class="form-control-sm" placeholder="Search..." aria-label="Search">
-        </form>
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <a href="/admin/main" class="logo-link"><h4 class="text-white mb-0">쇼핑몰 관리자</h4></a>
+          </div>
 
-        <div class="text-end">
-          <a href="/userHome" class="btn btn-info btn-sm">쇼핑몰</a>
-          <a href="/logout" class="btn btn-secondary btn-sm">로그아웃</a>
+          <div class="text-end">
+            <a href="/userHome" class="btn btn-info btn-sm">쇼핑몰</a>
+            <a href="/logout" class="btn btn-secondary btn-sm">로그아웃</a>
+          </div>
         </div>
       </div>
     </div>
@@ -91,6 +97,28 @@
       </div>
     </div>
   </header>
+
+  <script>
+      $(document).ready(function() {
+          // 현재 URL 경로 가져오기
+          const path = window.location.pathname;
+          
+          // 각 메뉴 항목에 대해 현재 페이지 체크
+          if (path === '/admin/main') {
+              $('.nav-link:contains("메인")').addClass('active-main');
+          } else if (path.includes('/admin/product') || path.includes('/admin/category')) {
+              $('.nav-link:contains("상품관리")').addClass('active');
+          } else if (path.includes('/order/admin/order')) {
+              $('.nav-link:contains("주문관리")').addClass('active');
+          } else if (path.includes('/admin/users')) {
+              $('.nav-link:contains("회원관리")').addClass('active');
+          } else if (path.includes('/admin/notice') || path.includes('/admin/faq')) {
+              $('.nav-link:contains("게시판관리")').addClass('active');
+          } else if (path.includes('/admin/chart')) {
+              $('.nav-link:contains("통계/분석")').addClass('active');
+          }
+      });
+  </script>
 
 </body>
 </html>

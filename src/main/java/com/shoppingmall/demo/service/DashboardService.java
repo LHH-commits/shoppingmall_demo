@@ -3,8 +3,6 @@ package com.shoppingmall.demo.service;
 import java.util.List;
 import java.util.Map;
 
-import com.shoppingmall.demo.domain.Product;
-
 public interface DashboardService {
     
     // 오늘 주문 수

@@ -73,18 +73,20 @@
                                         <c:forEach var="subCategory" items="${cList}">
                                             <c:if test="${subCategory.parentId == category.cateId}">
                                                 <li class="dropdown-submenu dropend">
-                                                    <a class="dropdown-item ${not empty lastCategory.parentId ? 'dropdown-toggle' : ''}" 
+                                                    <a class="dropdown-item" 
                                                        href="/userProduct/${subCategory.cateId}">
                                                         ${subCategory.cateName}
-                                                    </a>
-                                                    
-                                                    <!-- 3차 분류가 있는 경우에만 하위 메뉴 생성 -->
-                                                    <c:set var="hasThirdLevel" value="false" />
-                                                    <c:forEach var="lastCategory" items="${cList}">
-                                                        <c:if test="${lastCategory.parentId == subCategory.cateId}">
-                                                            <c:set var="hasThirdLevel" value="true" />
+                                                        <!-- 3차 분류가 있는 경우에만 화살표 추가 -->
+                                                        <c:set var="hasThirdLevel" value="false" />
+                                                        <c:forEach var="lastCategory" items="${cList}">
+                                                            <c:if test="${lastCategory.parentId == subCategory.cateId}">
+                                                                <c:set var="hasThirdLevel" value="true" />
+                                                            </c:if>
+                                                        </c:forEach>
+                                                        <c:if test="${hasThirdLevel}">
+                                                            <i class="bi bi-chevron-right float-end"></i>
                                                         </c:if>
-                                                    </c:forEach>
+                                                    </a>
                                                     
                                                     <c:if test="${hasThirdLevel}">
                                                         <ul class="dropdown-menu">
@@ -160,12 +162,25 @@
         // 페이지 로드시 장바구니 개수 업데이트
         $(document).ready(function() {
             updateCartCount();
+            
             // 드롭다운 서브메뉴 동작 설정
             $('.dropdown-submenu > a').on('click', function(e) {
-                if ($(this).next('ul').length) {
+                const $this = $(this);
+                const hasSubmenu = $this.next('ul').length > 0;
+                
+                // 클릭된 위치가 화살표 아이콘인지 확인
+                const $icon = $this.find('.bi-chevron-right');
+                const clickedOnIcon = $icon.length && 
+                    e.pageX >= $icon.offset().left && 
+                    e.pageX <= ($icon.offset().left + $icon.width());
+                
+                if (hasSubmenu && clickedOnIcon) {
+                    // 화살표를 클릭한 경우 서브메뉴 토글
                     e.preventDefault();
-                    $(this).next('ul').toggle();
+                    e.stopPropagation();
+                    $this.next('ul').toggle();
                 }
+                // 화살표가 아닌 곳을 클릭한 경우 링크 동작 수행
             });
 
             // 드롭다운 메뉴 hover 설정
