@@ -60,7 +60,11 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER)
                 .invalidSessionUrl("/")
             )
-			
+
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+            )
+
 			.csrf((AbstractHttpConfigurer::disable));
 		
 		return http.build();

@@ -123,7 +123,8 @@
 <script>
 	CKEDITOR.replace('pDetail', {
         height: 400,
-        filebrowserUploadUrl: '/upload/image', // 이미지 업로드 URL (설정 필요)
+        filebrowserUploadUrl: '/upload/editor/image', // 이미지 업로드 URL (설정 필요)
+        filebrowserUploadMethod: 'form',
         toolbar: [
             ['Font', 'FontSize'],
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
@@ -134,7 +135,15 @@
             ['Styles', 'Format', 'Font', 'FontSize'],
             ['TextColor', 'BGColor'],
             ['Maximize', 'ShowBlocks', 'Source']
-        ]
+        ],
+		on: {
+			fileUploadRequest: function(evt) {
+				console.log('파일 업로드 요청');
+			},
+			fileUploadResponse: function(evt) {
+				console.log('파일 업로드 응답', evt.data);
+			}
+		}
     });
 	// 페이지 로드 시 기본 상태 설정
 	window.onload = function() {

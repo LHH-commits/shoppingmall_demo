@@ -14,15 +14,22 @@ import lombok.Setter;
 public class FileConfig {
     // 업로드 경로를 저장하는 변수
     private String path;
+    private String editorPath;
 
     // 디버깅을 위한 생성자 추가
     public FileConfig() {
         // path 변수의 값을 출력하여 설정이 잘 되었는지 확인
         System.out.println("Upload Path: " + path);
+        System.out.println("Editor Path: " + editorPath);
     }
 
     // 업로드 경로 반환 메서드
     public String getUploadPath() {
         return path;
+    }
+
+    // 에디터 경로 반환 메서드
+    public String getEditorPath() {
+        return editorPath;
     }
 }
