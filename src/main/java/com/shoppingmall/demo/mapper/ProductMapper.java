@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import com.shoppingmall.demo.domain.Product;
 import com.shoppingmall.demo.domain.Pagination;
-
+import com.shoppingmall.demo.domain.SearchParam;
 @Mapper
 public interface ProductMapper {
 	public List<Product> selectProductList(Pagination pagination);
@@ -27,4 +27,6 @@ public interface ProductMapper {
 	public void updateProductCategoryPath();
 	
 	public List<Product> selectProductByCategory(Integer cateId);
+
+	public List<Product> searchProducts(SearchParam searchParam);
 }

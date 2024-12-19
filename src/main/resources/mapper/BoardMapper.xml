@@ -77,6 +77,8 @@
 		FROM		board
 		WHERE		1=1
 		AND			b_id = #{bId}
+		/* 캐시된 데이터가 아닌 최신 데이터를 가져오기 위한 힌트 추가 조회수 증가에 사용 */
+		FOR UPDATE
 	</select>
 	
 	<!-- 게시물 조회수 증가 -->

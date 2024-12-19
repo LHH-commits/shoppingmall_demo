@@ -87,7 +87,7 @@
                                                             <i class="bi bi-chevron-right float-end"></i>
                                                         </c:if>
                                                     </a>
-                                                    
+                                                    <!-- 3차 분류가 있는 경우에만 3차 분류 메뉴 추가 -->
                                                     <c:if test="${hasThirdLevel}">
                                                         <ul class="dropdown-menu">
                                                             <c:forEach var="lastCategory" items="${cList}">
@@ -115,15 +115,15 @@
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" 
                                data-bs-toggle="dropdown" aria-expanded="false">고객센터</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <!-- <li><a class="dropdown-item" href="#!">고객 서비스</a></li>
-                                <li><hr class="dropdown-divider" /></li> -->
                                 <li><a class="dropdown-item" href="/userNotice">공지사항</a></li>
                                 <li><a class="dropdown-item" href="/userFAQ">자주 묻는 질문(FAQ)</a></li>
                             </ul>
                         </li>
                     </ul>
-                    <form class="d-flex">
-                        <a href="/user/cart" class="btn btn-outline-dark me-3">
+
+                    <!-- 장바구니와 사용자 메뉴 -->
+                    <div class="d-flex align-items-center">
+                        <a href="/user/cart" class="btn btn-outline-dark me-2">
                             <i class="bi-cart-fill me-1"></i>
                             장바구니
                             <span id="cartCount" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -155,6 +155,28 @@
                 </div>
             </div>
         </nav>
+        <!-- 검색창 섹션 -->
+        <div class="bg-light py-2 border-bottom">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-5">
+                        <form action="/search" method="get" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" 
+                                    name="searchKeyword" 
+                                    class="form-control"
+                                    placeholder="찾으시는 상품을 검색해보세요" 
+                                    value="${searchKeyword}"
+                                    aria-label="Search">
+                                <button class="btn btn-dark" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         

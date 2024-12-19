@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.shoppingmall.demo.domain.Product;
 import com.shoppingmall.demo.domain.Pagination;
+import com.shoppingmall.demo.domain.SearchParam;
 import com.shoppingmall.demo.mapper.ProductMapper;
 
 @Service
@@ -62,5 +63,10 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> selectProductByCategory(Integer cateId) {
 		return productmapper.selectProductByCategory(cateId);
+	}
+
+	@Override
+	public List<Product> searchProducts(SearchParam searchParam) {
+		return productmapper.searchProducts(searchParam);
 	}
 }

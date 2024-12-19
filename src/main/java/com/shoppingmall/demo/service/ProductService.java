@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.shoppingmall.demo.domain.Product;
 import com.shoppingmall.demo.domain.Pagination;
+import com.shoppingmall.demo.domain.SearchParam;
 
 public interface ProductService {
 	public List<Product> selectProductList(Pagination pagination);
@@ -25,4 +26,6 @@ public interface ProductService {
 	public void updateProductCategoryPath();
 	
 	public List<Product> selectProductByCategory(Integer cateId);
+
+	public List<Product> searchProducts(SearchParam searchParam);
 }

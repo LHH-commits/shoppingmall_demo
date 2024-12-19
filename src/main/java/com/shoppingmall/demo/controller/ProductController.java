@@ -32,7 +32,9 @@ import com.shoppingmall.demo.config.FileConfig;
 import com.shoppingmall.demo.domain.Category;
 import com.shoppingmall.demo.domain.Pagination;
 import com.shoppingmall.demo.domain.Review;
+import com.shoppingmall.demo.domain.SearchParam;
 import com.shoppingmall.demo.service.ReviewService;
+
 @Controller
 public class ProductController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -298,5 +300,18 @@ public class ProductController {
 		logger.info("상품 목록 크기: " + (pList != null ? pList.size() : "null"));
 		
 		return "/userProduct";  // 슬래시 제거
+	}
+
+	@GetMapping("/search")
+	public String searchProduct(@ModelAttribute SearchParam searchParam, Model model) {
+		// 카테고리 목록은 selectTierCategory()로 변경 (계층구조 유지를 위해)
+		List<Category> cList = categoryservice.selectTierCategory();
+		model.addAttribute("cList", cList);
+		
+		List<Product> searchList = productservice.searchProducts(searchParam);
+		model.addAttribute("searchList", searchList);
+		model.addAttribute("searchKeyword", searchParam.getSearchKeyword());
+		
+		return "/searchResult";
 	}
 }

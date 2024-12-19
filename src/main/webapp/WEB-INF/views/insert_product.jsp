@@ -138,7 +138,6 @@ CKEDITOR.replace('pDetail', {
     },
     // 툴바 설정
     toolbar: [
-        { name: 'document', items: ['Source'] },
         { name: 'clipboard', items: ['Undo', 'Redo'] },
         { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
         { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },

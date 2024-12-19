@@ -93,9 +93,9 @@
 		SELECT  p.p_id, p.p_price, p.p_seller, p.p_stock, p.p_name, p.p_imgpath,
 				DATE_FORMAT(p_uptime, '%Y-%m-%d') AS p_uptime,
 				c.category_id, c.category_name, c.parent_id
-			FROM    product p
-			LEFT JOIN category c ON p.category_id = c.category_id
-			ORDER BY p_id DESC
+		FROM    product p
+		LEFT JOIN category c ON p.category_id = c.category_id
+		ORDER BY p_id DESC
 	</select>
 	
 	<!-- 페이지네이션 적용을 위한 카운트 -->
@@ -165,5 +165,19 @@
 			   p.category_id, p.p_imgpath, p.p_detail
 		FROM product p
 		INNER JOIN CategoryHierarchy ch ON p.category_id = ch.category_id
+	</select>
+
+	<!-- 상품명을 검색하여 조회 -->
+	<select id="searchProducts" parameterType="SearchParam" resultMap="ProductMap">
+		SELECT * 
+		FROM product
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND (
+				p_name LIKE CONCAT('%', #{searchKeyword}, '%')
+				OR p_detail LIKE CONCAT('%', #{searchKeyword}, '%')
+			)
+		</if>
+		ORDER BY p_id DESC
 	</select>
 </mapper>

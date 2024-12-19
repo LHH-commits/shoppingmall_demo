@@ -123,28 +123,51 @@
 <script>
 	CKEDITOR.replace('pDetail', {
         height: 400,
-        filebrowserUploadUrl: '/upload/editor/image', // 이미지 업로드 URL (설정 필요)
-        filebrowserUploadMethod: 'form',
-        toolbar: [
-            ['Font', 'FontSize'],
-            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['Image', 'Table', 'HorizontalRule'],
-            ['Styles', 'Format', 'Font', 'FontSize'],
-            ['TextColor', 'BGColor'],
-            ['Maximize', 'ShowBlocks', 'Source']
-        ],
-		on: {
-			fileUploadRequest: function(evt) {
-				console.log('파일 업로드 요청');
-			},
-			fileUploadResponse: function(evt) {
-				console.log('파일 업로드 응답', evt.data);
+		language: 'ko',
+		// 업로드 URL 설정
+		filebrowserUploadUrl: '/upload/editor/image',
+		filebrowserImageUploadUrl: '/upload/editor/image',
+		// 불필요한 플러그인 제거
+		removePlugins: 'exportpdf',
+		// 필요한 플러그인만 활성화
+		extraPlugins: 'uploadimage',
+		// 이미지 업로드 설정
+		image: {
+			toolbar: ['ImageStyle:full', 'ImageStyle:side', '|', 'ImageTextAlternative'],
+			upload: {
+				types: ['jpeg', 'png', 'gif', 'bmp']
 			}
-		}
+		},
+		// 툴바 설정
+		toolbar: [
+			{ name: 'clipboard', items: ['Undo', 'Redo'] },
+			{ name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+			{ name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+			{ name: 'insert', items: ['Image'] },
+			{ name: 'styles', items: ['Format', 'Font', 'FontSize'] }
+		]
     });
+	// 업로드 모니터링
+	CKEDITOR.on('instanceReady', function(ev) {
+		var editor = ev.editor;
+		
+		editor.on('fileUploadRequest', function(evt) {
+			console.log('업로드 요청:', evt);
+		});
+		
+		editor.on('fileUploadResponse', function(evt) {
+			console.log('업로드 응답:', evt);
+			try {
+				var response = JSON.parse(evt.data.fileLoader.xhr.responseText);
+				console.log('응답 데이터:', response);
+				if (response.uploaded && response.url) {
+					evt.data.url = response.url;
+				}
+			} catch(e) {
+				console.error('응답 처리 오류:', e);
+			}
+		});
+	});
 	// 페이지 로드 시 기본 상태 설정
 	window.onload = function() {
 	  // 본사매입이 체크되어 있을 경우 판매자 입력란 비활성화

@@ -28,7 +28,7 @@
         </section>
         <!-- Footer-->
         <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Personal Project</p></div>
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Personal Project - Hyeok</p></div>
         </footer>
         
         
