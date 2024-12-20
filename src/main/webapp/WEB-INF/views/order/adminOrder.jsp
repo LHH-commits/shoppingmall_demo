@@ -3,38 +3,27 @@
 <%@ include file="../adminUI.jsp" %>
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col">
-            <h2 class="mb-4">주문 관리</h2>
-        </div>
-    </div>
+    <div class="card border-light">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="card-title mb-0">주문 관리</h2>
+                
+                <!-- 배송상태 변경 버튼 그룹 -->
+                <div class="btn-group">
+                    <button class="btn btn-outline-secondary" onclick="updateStatus('배송준비중')">배송준비중</button>
+                    <button class="btn btn-outline-secondary" onclick="updateStatus('배송중')">배송중</button>
+                    <button class="btn btn-outline-secondary" onclick="updateStatus('배송완료')">배송완료</button>
+                </div>
+            </div>
 
-    <!-- 배송상태 변경 버튼 그룹 수정 -->
-    <div class="row mb-4">
-        <div class="col">
-            <div class="btn-group">
-                <button class="btn btn-light" onclick="updateStatus('배송준비중')">배송준비중</button>
-                <button class="btn btn-light" onclick="updateStatus('배송중')">배송중</button>
-                <button class="btn btn-light" onclick="updateStatus('배송완료')">배송완료</button>
+            <!-- 주문 목록이 로드될 영역 -->
+            <div id="orderListContainer">
+                <!-- 여기에 orderList.jsp가 로드됨 -->
             </div>
         </div>
     </div>
 
-    <style>
-        .btn-group .btn {
-            border: 1px solid #dee2e6;
-        }
-        .btn-group .btn:hover {
-            background-color: #e9ecef;
-        }
-    </style>
-
-    <!-- 주문 목록이 로드될 영역 -->
-    <div id="orderListContainer">
-        <!-- 여기에 orderList.jsp가 로드됨 -->
-    </div>
-
-    <!-- 주문 상세  모달 추가 -->
+    <!-- 주문 상세 모달 -->
     <div class="modal fade" id="orderDetailModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

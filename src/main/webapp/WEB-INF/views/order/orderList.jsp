@@ -6,28 +6,43 @@
 <!-- 주문 목록 테이블 -->
 <div class="table-responsive">
     <table class="table table-hover">
-        <thead class="table-info">
+        <thead class="table-light">
             <tr>
-                <th><input type="checkbox" class="form-check-input" id="checkAll"></th>
-                <th>주문일시</th>
-                <th>주문번호</th>
-                <th>주문인</th>
-                <th>주문금액</th>
-                <th>배송상태</th>
-                <th>관리</th>
+                <th class="text-center" style="width: 50px;">
+                    <input type="checkbox" class="form-check-input" id="checkAll">
+                </th>
+                <th style="width: 160px;">주문일시</th>
+                <th style="width: 120px;">주문번호</th>
+                <th style="width: 120px;">주문인</th>
+                <th style="width: 120px;">주문금액</th>
+                <th style="width: 120px;">배송상태</th>
+                <th style="width: 100px;">주문상세</th>
             </tr>
         </thead>
         <tbody>
             <c:forEach var="order" items="${orders}">
                 <tr>
-                    <td><input type="checkbox" class="form-check-input chkOrder" value="${order.oId}"></td>
-                    <td><fmt:formatDate value="${order.orders.oDatetime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                    <td>${order.oId}</td>
-                    <td>${order.orders.user.uName}</td>
-                    <td><fmt:formatNumber value="${order.orders.totalPrice}" pattern="#,###"/>원</td>
-                    <td>${order.odDeliveryStatus}</td>
+                    <td class="text-center">
+                        <input type="checkbox" class="form-check-input chkOrder" value="${order.oId}">
+                    </td>
+                    <td class="align-middle">
+                        <fmt:formatDate value="${order.orders.oDatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                    </td>
+                    <td class="align-middle">${order.oId}</td>
+                    <td class="align-middle">${order.orders.user.uName}</td>
+                    <td class="align-middle text-start">
+                        <fmt:formatNumber value="${order.orders.totalPrice}" pattern="#,###"/>원
+                    </td>
+                    <td class="align-middle">
+                        <span class="badge bg-${order.odDeliveryStatus eq '배송준비중' ? 'secondary' : 
+                                            order.odDeliveryStatus eq '배송중' ? 'primary' : 
+                                            'success'}">
+                            ${order.odDeliveryStatus}
+                        </span>
+                    </td>
                     <td>
-                        <button class="btn btn-sm btn-success" onclick="openOrderDetail('${order.oId}')">상세</button>
+                        <button class="btn btn-outline-secondary btn-sm" 
+                                onclick="openOrderDetail('${order.oId}')">상세</button>
                     </td>
                 </tr>
             </c:forEach>
@@ -36,21 +51,24 @@
 </div>
 
 <!-- 페이지네이션 -->
-<nav>
+<nav class="mt-4">
     <ul class="pagination justify-content-center">
         <c:if test="${pagination.prevPage > 0}">
             <li class="page-item">
-                <a class="page-link" href="javascript:void(0)" onclick="loadOrderList(${pagination.prevPage})">&laquo;</a>
+                <a class="page-link" href="javascript:void(0)" 
+                   onclick="loadOrderList(${pagination.prevPage})">&laquo;</a>
             </li>
         </c:if>
         <c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}">
             <li class="page-item ${i == pagination.page ? 'active' : ''}">
-                <a class="page-link" href="javascript:void(0)" onclick="loadOrderList(${i})">${i}</a>
+                <a class="page-link" href="javascript:void(0)" 
+                   onclick="loadOrderList(${i})">${i}</a>
             </li>
         </c:forEach>
         <c:if test="${pagination.nextPage <= pagination.lastPage}">
             <li class="page-item">
-                <a class="page-link" href="javascript:void(0)" onclick="loadOrderList(${pagination.nextPage})">&raquo;</a>
+                <a class="page-link" href="javascript:void(0)" 
+                   onclick="loadOrderList(${pagination.nextPage})">&raquo;</a>
             </li>
         </c:if>
     </ul>

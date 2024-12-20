@@ -7,6 +7,15 @@
 <head>
 <meta charset="UTF-8">
 <title>자주묻는질문 관리</title>
+<style>
+    .table a {
+        text-decoration: none;
+        color: #333;
+    }
+    .table a:hover {
+        color: #007bff;
+    }
+</style>
 </head>
 <body>
 <div class="container mt-4">
@@ -41,7 +50,7 @@
         <ul class="pagination justify-content-center">
             <c:if test="${pagination.startPage > 1}">
                 <li class="page-item">
-                    <a class="page-link" href="/admin/faq?page=${pagination.prevPage}">이전</a>
+                    <a class="page-link" href="/admin/faq?page=${pagination.prevPage}">&laquo;</a>
                 </li>
             </c:if>
             
@@ -53,7 +62,7 @@
 
             <c:if test="${pagination.endPage < pagination.lastPage}">
                 <li class="page-item">
-                    <a class="page-link" href="/admin/faq?page=${pagination.nextPage}">다음</a>
+                    <a class="page-link" href="/admin/faq?page=${pagination.nextPage}">&raquo;</a>
                 </li>
             </c:if>
         </ul>

@@ -3,8 +3,8 @@
 <%@ include file="homeUI.jsp" %>
 
 <div class="category-header">
-    <div class="container">
-        <h1 class="category-title">'${searchKeyword}' 검색 결과</h1>
+    <div class="container mt-4">
+        <h2 class="category-title">'${searchKeyword}' 검색 결과</h2>
     </div>
 </div>
 

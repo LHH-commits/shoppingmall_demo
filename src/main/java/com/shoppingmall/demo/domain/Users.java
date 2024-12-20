@@ -15,6 +15,7 @@ public class Users implements UserDetails {
 	private String uName;		//u_name
 	private String uDatetime;	//u_datetime
 	private String uAddress;	//u_address
+	private int totalOrderAmount;	//total_order_amount
 	
 	private int row_num;
 	private String u_auth;
@@ -80,6 +81,12 @@ public class Users implements UserDetails {
 	}
 	public void setuAddress(String uAddress) {
 		this.uAddress = uAddress;
+	}
+	public int getTotalOrderAmount() {
+		return totalOrderAmount;
+	}
+	public void setTotalOrderAmount(int totalOrderAmount) {
+		this.totalOrderAmount = totalOrderAmount;
 	}
 	
 	

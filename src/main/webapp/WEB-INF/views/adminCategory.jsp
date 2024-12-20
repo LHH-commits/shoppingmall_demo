@@ -10,70 +10,92 @@
 </head>
 <body>
 	<div class="container">
-		<h2 class="text-center mt-3 mb-3">카테고리 관리</h2>
-		<form id="categoryForm" action="/admin/insertCategory" method="post">
-			<input type="hidden" name="parentId" id="selectedParentId">
-			<label class="form-label">카테고리 소속</label>
-			<div class="row">
-				<div class="col-md-2">
-					<!-- 옆으로 나란히 2개정도의 드랍다운(1차, 2차분류)을 만들어서
-						 고를 수 있게하고 선택하지 않았다면 최상위 카테고리로 등록 -->
-					<select class="form-select" id="firstCategory" name="parentId">
-                        <option value="">=1차 카테고리 선택=</option>
-                        <c:forEach var="category" items="${topCategory}">
-                            <option value="${category.cateId}">${category.cateName}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select" id="secondCategory" disabled>
-                        <option value="">=2차 카테고리 선택=</option>
-                    </select>
-                </div>
+		<h2 class="text-center my-4">카테고리 관리</h2>
+		
+		<!-- 카테고리 등록 폼 -->
+		<div class="card mb-4 border-light">
+			<div class="card-body">
+				<form id="categoryForm" action="/admin/insertCategory" method="post">
+					<input type="hidden" name="parentId" id="selectedParentId">
+					
+					<div class="mb-3">
+						<label class="form-label">카테고리 소속</label>
+						<div class="row">
+							<div class="col-md-3">
+								<select class="form-select" id="firstCategory" name="parentId">
+									<option value="">=1차 카테고리 선택=</option>
+									<c:forEach var="category" items="${topCategory}">
+										<option value="${category.cateId}">${category.cateName}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<select class="form-select" id="secondCategory" disabled>
+									<option value="">=2차 카테고리 선택=</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<div class="mb-3">
+								<label class="form-label" for="cateName">카테고리명</label>
+								<input type="text" class="form-control" name="cateName" required>
+							</div>
+						</div>
+					</div>
+					
+					<div class="text-end">
+						<button type="submit" class="btn btn-primary">카테고리 추가</button>
+					</div>
+				</form>
 			</div>
-			<input type="hidden" name="parentId" id="selectedParentId">
-			<div class="mt-3 col-md-4">
-				<label class="form-label" for="cateName">카테고리명</label>
-				<input type="text" class="form-control" name="cateName" required>
+		</div>
+
+		<!-- 카테고리 목록 -->
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title mb-3">카테고리 목록</h4>
+				<table class="table table-hover">
+					<thead class="table-light">
+						<tr>
+							<th scope="col" style="width: 10%">번호</th>
+							<th scope="col" style="width: 25%">카테고리명</th>
+							<th scope="col" style="width: 40%">분류</th>
+							<th scope="col" style="width: 25%">관리</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="category" items="${tierCategory}">
+							<tr>
+								<td class="align-middle">${category.cateId}</td>
+								<td class="align-middle">
+									<c:if test="${category.parentId != null}">
+										<span class="text-muted">└</span>
+									</c:if>
+									${category.cateName}
+								</td>
+								<td class="align-middle">${category.path}</td>
+								<td>
+									<div class="btn-group">
+										<a href="/admin/editCategory?cateId=${category.cateId}" 
+										   class="btn btn-outline-secondary btn-sm">수정</a>
+										<form action="/admin/deleteCategory" method="post" class="d-inline ms-1">
+											<input type="hidden" name="cateId" value="${category.cateId}">
+											<button type="button" class="btn btn-outline-danger btn-sm" 
+													onclick="confirmDelete(this.form);">삭제</button>
+										</form>
+									</div>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
 			</div>
-			<div class="d-flex justify-content-end align-items-center mt-3">
-				<button type="submit" class="btn btn-sm btn-primary">카테고리 추가</button>
-			</div>
-		</form>
-		<h4 class="mt-2 mb-2">카테고리 목록</h4>
-		<table class="table table-hover">
-			<thead class="table-info">
-				<tr>
-					<th scope="col" width="10%">번호</th>
-					<th scope="col" width="25%">카테고리명</th>
-					<th scope="col" width="40%">분류</th>
-					<th scope="col" width="30%">관리</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="category" items="${tierCategory}">
-			        <tr>
-			            <td><strong>${category.cateId}</strong></td>
-			            <td>
-			                <c:if test="${category.parentId != null}">
-			                    <span class="text-muted">└</span>
-			                </c:if>
-			                ${category.cateName}
-			            </td>
-			            <td>${category.path}</td>
-			            <td>
-			                <a href="/admin/editCategory?cateId=${category.cateId}" class="btn btn-sm btn-outline-success me-1">수정</a>
-			                <form action="/admin/deleteCategory" method="post" style="disabled:inline;">
-			                	<input type="hidden" name="cateId" value="${category.cateId }">
-				                <button type="button" class="btn btn-sm btn-outline-secondary me-1" 
-	                                    onclick="confirmDelete(this.form);">삭제</button>
-                            </form>
-			            </td>
-			        </tr>
-			    </c:forEach>
-			</tbody>
-		</table>
+		</div>
 	</div>
+
 	<script>
 		$(document).ready(function(){
 	        // 1차 카테고리 선택 시

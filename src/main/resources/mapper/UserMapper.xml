@@ -13,6 +13,7 @@
 		<result property="isAccountNonLocked" column="u_isAccountNonLocked"/>
 		<result property="isCredentialsNonExpired" column="u_isCredentialsNonExpired"/>
 		<result property="isEnabled" column="u_isEnabled"/>
+		<result property="totalOrderAmount" column="total_order_amount"/>
 	</resultMap>
 
 	<!-- 유저 권한 읽기 -->
@@ -62,14 +63,17 @@
 		FROM	users
 	</select>
 	
-	<!-- 유저목록 with Pagination -->
+	<!-- 유저목록 with Pagination and Total Order Amount -->
 	<select id="selectUserList" parameterType="Pagination" resultMap="UserMap">
-		SELECT	ROW_NUMBER() OVER (ORDER BY u_datetime ASC) as row_num, 
+		SELECT	ROW_NUMBER() OVER (ORDER BY u.u_datetime ASC) as row_num, 
 				u.u_id, u.u_name, u.u_phone, u.u_datetime,
-				a.u_auth
+				a.u_auth,
+				COALESCE(SUM(o.total_price), 0) as total_order_amount
 		FROM	users u
 		LEFT JOIN auth a ON u.u_id = a.u_id
-		ORDER BY u_datetime DESC
+		LEFT JOIN orders o ON u.u_id = o.u_id
+		GROUP BY u.u_id, u.u_name, u.u_phone, u.u_datetime, a.u_auth
+		ORDER BY u.u_datetime DESC
 		LIMIT	#{startIndex}, #{perPage}
 	</select>
 </mapper>
