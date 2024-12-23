@@ -42,21 +42,34 @@
                             <!-- Product image-->
                             <c:choose>
                                 <c:when test="${not empty product.pImgpath}">
-                                    <img class="card-img-top" 
-                                         src="${pageContext.request.contextPath}${product.pImgpath}"
-                                         alt="${product.pName}" />
+                                    <a href="${pageContext.request.contextPath}/productDetail?pId=${product.pId}">
+                                        <img class="card-img-top" 
+                                             src="${pageContext.request.contextPath}${product.pImgpath}"
+                                             alt="${product.pName}"
+                                             style="aspect-ratio: 1; object-fit: contain; width: 100%;" />
+                                    </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <img class="card-img-top" 
-                                         src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" 
-                                         alt="${product.pName}" />
+                                    <a href="${pageContext.request.contextPath}/productDetail?pId=${product.pId}">
+                                        <img class="card-img-top" 
+                                             src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" 
+                                             alt="${product.pName}"
+                                             style="aspect-ratio: 1; object-fit: contain; width: 100%;" />
+                                    </a>
                                 </c:otherwise>
                             </c:choose>
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
-                                    <h5 class="fw-bolder">${product.pName}</h5>
-                                    ${product.pPrice}원
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">
+                                        <a href="${pageContext.request.contextPath}/productDetail?pId=${product.pId}" 
+                                           style="text-decoration: none; color: inherit;">
+                                            ${product.pName}
+                                        </a>
+                                    </h5>
+                                    <!-- Product price-->
+                                    <span>${product.pPrice}원</span>
                                 </div>
                             </div>
                             <!-- Product actions-->
@@ -87,6 +100,16 @@
             },
             error: function(xhr, status, error) {
                 alert(xhr.responseText);
+            }
+        });
+    }
+
+    function updateCartCount() {
+        $.ajax({
+            url: '/cart/count',
+            type: 'GET',
+            success: function(count) {
+                $('#cartCount').text(count);
             }
         });
     }
