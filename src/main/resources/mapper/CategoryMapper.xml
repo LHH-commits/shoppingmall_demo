@@ -99,4 +99,25 @@
 		FROM	SubCategories
 		ORDER BY category_id;
 	</select>
+	
+	<!-- 카테고리의 전체 경로 조회 -->
+	<select id="getCategoryPath" parameterType="int" resultMap="CategoryMap">
+		WITH RECURSIVE CategoryPath AS (
+			-- 현재 카테고리
+			SELECT category_id, category_name, parent_id, 1 as level
+			FROM category
+			WHERE category_id = #{cateId}
+			
+			UNION ALL
+			
+			-- 상위 카테고리들
+			SELECT c.category_id, c.category_name, c.parent_id, cp.level + 1
+			FROM category c
+			INNER JOIN CategoryPath cp ON c.category_id = cp.parent_id
+		)
+		SELECT *
+		FROM CategoryPath
+		ORDER BY level DESC;
+	</select>
+	
 </mapper>

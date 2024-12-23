@@ -66,18 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 	@Override
-	public String getCategoryPath(int cateId) {
-		Category category = categorymapper.selectCategoryById(cateId);
-		if (category == null) {
-			return "";
-		}
-
-		List<Category> tierCategories = categorymapper.selectTierCategory();
-		for (Category c : tierCategories) {
-			if (c.getCateId() == cateId) {
-				return c.getPath();
-			}
-		}
-		return "";
+	public List<Category> getCategoryPath(int cateId) {
+		return categorymapper.getCategoryPath(cateId);
 	}
 }

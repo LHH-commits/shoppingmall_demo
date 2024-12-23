@@ -119,7 +119,7 @@
 	            
 	            // AJAX로 하위 카테고리 HTML 옵션 로드
 	            $.ajax({
-	                url: '/api/categories/options',
+	                url: '/admin/api/categories/options',
 	                method: 'GET',
 	                data: { parentId: parentId },
 	                success: function(html) {

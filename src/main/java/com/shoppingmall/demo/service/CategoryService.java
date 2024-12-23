@@ -24,5 +24,5 @@ public interface CategoryService {
 	
 	public List<Category> selectAllSubCategories(int cateId);
 	
-	public String getCategoryPath(int cateId);
+	public List<Category> getCategoryPath(int cateId);
 }

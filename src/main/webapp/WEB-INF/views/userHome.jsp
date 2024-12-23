@@ -57,27 +57,30 @@
 
                 <!-- Slides -->
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://via.placeholder.com/1920x400" class="d-block w-100" alt="Banner 1">
-                        <div class="carousel-caption">
-                            <h2>신상품 할인</h2>
-                            <p>최대 30% 할인 진행중</p>
+                    <a href="${pageContext.request.contextPath}/productDetail?pId=55">
+                        <div class="carousel-item active">
+                            <img src="https://via.placeholder.com/1920x800" class="d-block w-100" >
+                            <div class="carousel-caption">
+                                <h2>배너 테스트1</h2>
+                            </div>
                         </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://via.placeholder.com/1920x400" class="d-block w-100" alt="Banner 2">
-                        <div class="carousel-caption">
-                            <h2>여름 시즌 오픈</h2>
-                            <p>시원한 여름 상품 모음전</p>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/productDetail?pId=56">
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/1920x800" class="d-block w-100">
+                            <div class="carousel-caption">
+                                <h2>배너 테스트2</h2>
+                            </div>
                         </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://via.placeholder.com/1920x400" class="d-block w-100" alt="Banner 3">
-                        <div class="carousel-caption">
-                            <h2>회원 특별 혜택</h2>
-                            <p>신규 회원 가입시 10% 할인쿠폰</p>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/productDetail?pId=57">
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/1920x800" class="d-block w-100">
+                            <div class="carousel-caption">
+                                <h2>배너 테스트3</h2>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 <!-- Controls -->
@@ -95,7 +98,7 @@
             // 캐러셀 초기화
             const myCarousel = document.getElementById('mainCarousel');
             const carousel = new bootstrap.Carousel(myCarousel, {
-                interval: 5000,  // 5초
+                interval: 3000,  // 3초
                 wrap: true,      // 마지막 슬라이드에서 처음으로 순환
                 ride: 'carousel' // 자동 재생 활성화
             });

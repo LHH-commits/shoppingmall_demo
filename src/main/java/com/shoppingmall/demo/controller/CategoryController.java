@@ -65,25 +65,27 @@ public class CategoryController {
 	@GetMapping("/editCategory")
 	public String editCategory(@RequestParam("cateId") int cateId, Model model) {
 		Category category = categoryservice.selectCategoryById(cateId);
-	    List<Category> tierCategory = categoryservice.selectTierCategory();
-	    
-	    // 최상위 카테고리 필터링
-	    List<Category> topCategory = tierCategory.stream()
-	            .filter(c -> c.getParentId() == null)
-	            .collect(Collectors.toList());
+		List<Category> categoryPath = categoryservice.getCategoryPath(cateId);
+		List<Category> tierCategory = categoryservice.selectTierCategory();
 		
-	    model.addAttribute("topCategory", topCategory);
+		// 최상위 카테고리 필터링
+		List<Category> topCategory = tierCategory.stream()
+				.filter(c -> c.getParentId() == null)
+				.collect(Collectors.toList());
+		
+		model.addAttribute("topCategory", topCategory);
 		model.addAttribute("category", category);
+		model.addAttribute("categoryPath", categoryPath);
 		
 		return "/edit_category";
 	}
 	
 	@PostMapping("/updateCategory")
 	public String updateCategory(@ModelAttribute Category category) {
-		/*
-		 * // 선택한 카테고리의 ID를 parentId로 설정 if (category.getParentId() != null) { // 이동하려는
-		 * 카테고리의 parentId를 설정 category.setParentId(category.getParentId()); }
-		 */
+		// parentId가 0이거나 빈 문자열인 경우 null로 설정
+		if (category.getParentId() == null || category.getParentId() == 0) {
+			category.setParentId(null);
+		}
 		
 		categoryservice.updateCategory(category);
 		
@@ -98,17 +100,25 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/api/categories/options")
-    public String getSubCategoryOptions(@RequestParam("parentId") Integer parentId, 
-    		@RequestParam(value = "excludeId", required = false) Integer excludeId, Model model) {
+    public String getSubCategoryOptions(
+            @RequestParam("parentId") Integer parentId, 
+            @RequestParam(value = "excludeId", required = false) Integer excludeId,
+            @RequestParam(value = "selectedId", required = false) Integer selectedId,
+            Model model) {
+		logger.info("parentId: " + parentId);
+		logger.info("excludeId: " + excludeId);
+		logger.info("selectedId: " + selectedId);
+		
 		Map<String, Integer> params = new HashMap<>();
 	    params.put("parentId", parentId);
 	    params.put("excludeId", excludeId);
 	    
 	    List<Category> subCategories = categoryservice.selectSubCategories(params);
-        
-        model.addAttribute("subCategories", subCategories);
-        
-        // options.jsp를 렌더링하여 HTML 옵션 태그들만 반환
+	    logger.info("subCategories size: " + subCategories.size());
+	    
+	    model.addAttribute("selectedId", selectedId);
+	    model.addAttribute("subCategories", subCategories);
+	    
         return "/category_options";
     }
 	

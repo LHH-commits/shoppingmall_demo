@@ -23,4 +23,6 @@ public interface CategoryMapper {
 	public List<Category> selectTierCategory();
 	
 	public List<Category> selectAllSubCategories(int cateId);
+	
+	public List<Category> getCategoryPath(int cateId);
 }

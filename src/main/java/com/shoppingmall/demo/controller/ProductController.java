@@ -284,11 +284,14 @@ public class ProductController {
 		Category currentCategory = categoryservice.selectCategoryById(cateId);
 		model.addAttribute("currentCategory", currentCategory);
 
-		// 카테고리 경로
-		String categoryPath = categoryservice.getCategoryPath(cateId);
+		// 카테고리 경로 (List<Category>를 받아서 처리)
+		List<Category> categoryPathList = categoryservice.getCategoryPath(cateId);
+		String categoryPath = categoryPathList.stream()
+				.map(Category::getCateName)
+				.collect(Collectors.joining(" > "));
 		model.addAttribute("categoryPath", categoryPath);
 		
-		// 카테고리 목록은 selectTierCategory()로 변경 (계층구조 유지를 위해)
+		// 카테고리 목록
 		List<Category> cList = categoryservice.selectTierCategory();
 		model.addAttribute("cList", cList);
 		
@@ -299,7 +302,7 @@ public class ProductController {
 		logger.info("카테고리 ID: " + cateId);
 		logger.info("상품 목록 크기: " + (pList != null ? pList.size() : "null"));
 		
-		return "/userProduct";  // 슬래시 제거
+		return "/userProduct";
 	}
 
 	@GetMapping("/search")
