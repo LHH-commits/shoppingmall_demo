@@ -2,6 +2,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="homeUI.jsp" %>
 
+<style>
+    .product-name {
+        text-decoration: none;
+        color: dimgray;
+    }
+    .product-name:hover {
+        color: #007bff;
+    }
+</style>
+
 <div class="category-header">
     <div class="container mt-4">
         <h2 class="category-title">'${searchKeyword}' 검색 결과</h2>
@@ -39,7 +49,8 @@
                             <div class="text-center">
                                 <!-- Product name-->
                                 <h5 class="fw-bolder">
-                                    <a href="${pageContext.request.contextPath}/productDetail?pId=${product.pId}">${product.pName}</a>
+                                    <a href="${pageContext.request.contextPath}/productDetail?pId=${product.pId}"
+                                    class="product-name">${product.pName}</a>
                                 </h5>
                                 <!-- Product price-->
                                 <span>${product.pPrice}원</span>

@@ -22,6 +22,13 @@
             font-weight: bold;
             margin: 0;
         }
+        .product-name {
+            text-decoration: none;
+            color: dimgray;
+        }
+        .product-name:hover {
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +71,7 @@
                                     <!-- Product name-->
                                     <h5 class="fw-bolder">
                                         <a href="${pageContext.request.contextPath}/productDetail?pId=${product.pId}" 
-                                           style="text-decoration: none; color: inherit;">
+                                           class="product-name">
                                             ${product.pName}
                                         </a>
                                     </h5>

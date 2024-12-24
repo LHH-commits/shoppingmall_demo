@@ -10,6 +10,7 @@
 <style>
     .table a {
         text-decoration: none;
+        font-weight: bold;
         color: #333;
     }
     .table a:hover {
