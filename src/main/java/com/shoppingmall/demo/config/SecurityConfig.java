@@ -34,6 +34,7 @@ public class SecurityConfig {
 					.loginPage("/")
 					.loginProcessingUrl("/loginPro")
 					.defaultSuccessUrl("/loginSuccess",true)
+                    .failureUrl("/?error=true")
 					.usernameParameter("uId")
 					.passwordParameter("uPassword")
 					.permitAll()

@@ -21,6 +21,11 @@
 			<div class="col-md-2 card mt-5 fixed-size-box">
 				<div class="card-body">
 					<h3 class="text-center mb-4 mt-4"><strong>통합 로그인</strong></h3>
+					<c:if test="${not empty error}">
+						<div class="alert alert-danger mb-4" style="font-size: 0.8rem;">
+							${error}
+						</div>
+					</c:if>
 					<form action="/loginPro" method="post">
 						<div data-mdb-input-init class="form-outline mb-4">
 							<label class="form-label">아이디</label>

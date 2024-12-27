@@ -23,6 +23,7 @@
         }
         .notice-title {
             color: #333;
+            font-weight: 500;
             text-decoration: none;
             transition: color 0.2s;
         }

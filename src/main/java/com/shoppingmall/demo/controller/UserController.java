@@ -56,7 +56,10 @@ public class UserController {
 	DashboardService dashboardservice;
 	
 	@GetMapping("/")
-	public String home() {
+	public String loginPage(@RequestParam(value="error", required=false) String error, Model model) {
+		if(error != null) {
+			model.addAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
+		}
 		return "/login";
 	}
 	
