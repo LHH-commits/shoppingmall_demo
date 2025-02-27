@@ -14,6 +14,7 @@
             <result property="pPrice" column="p_price"/>
             <result property="pStock" column="p_stock"/>
             <result property="pSeller" column="p_seller"/>
+			<result property="pImgpath" column="p_imgpath"/>
         </association>
         <!-- User 정보 매핑 -->
         <association property="user" javaType="com.shoppingmall.demo.domain.Users">
@@ -31,7 +32,8 @@
 				p.p_name,
 				p.p_price,
 				p.p_stock,
-				p.p_seller
+				p.p_seller,
+				p.p_imgpath
 		FROM	cart c
 		JOIN	product p ON c.p_id = p.p_id
 		JOIN 	users u ON c.u_id = u.u_id

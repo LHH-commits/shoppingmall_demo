@@ -98,26 +98,26 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>주문번호</th>
-                                    <th>주문자</th>
-                                    <th>주문금액</th>
-                                    <th>주문상태</th>
-                                    <th>주문일시</th>
+                                    <th class="small" style="width: 20%;">주문번호</th>
+                                    <th class="small" style="width: 10%;">주문자</th>
+                                    <th class="small" style="width: 10%;">주문금액</th>
+                                    <th class="small" style="width: 10%;">주문상태</th>
+                                    <th class="small" style="width: 15%;">주문일시</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:forEach items="${recentOrders}" var="order">
                                     <tr>
-                                        <td>${order.oId}</td>
-                                        <td>${order.uName}</td>
-                                        <td><fmt:formatNumber value="${order.totalPrice}" pattern="#,###"/>원</td>
+                                        <td class="small">${order.oId}</td>
+                                        <td class="small">${order.uName}</td>
+                                        <td class="small"><fmt:formatNumber value="${order.totalPrice}" pattern="#,###"/>원</td>
                                         <td>
                                             <span class="badge ${order.odDeliveryStatus eq '배송완료' ? 'bg-success' : 
                                                 order.odDeliveryStatus eq '배송중' ? 'bg-primary' : 'bg-warning'}">
                                                 ${order.odDeliveryStatus}
                                             </span>
                                         </td>
-                                        <td><fmt:formatDate value="${order.oDatetime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                                        <td class="small"><fmt:formatDate value="${order.oDatetime}" pattern="yyyy-MM-dd HH:mm"/></td>
                                     </tr>
                                 </c:forEach>
                             </tbody>

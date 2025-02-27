@@ -148,16 +148,20 @@ public class ProductController {
 	
 	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/admin/deleteProduct")
+	@ResponseBody // 반환값을 뷰로 전달하지 않고 문자열로 반환
 	public String deleteProduct(@RequestParam("pIds") List<Integer> pIds) {
-		for(int pId : pIds) {
-			// 해당 상품에 달린 리뷰 삭제
-			reviewservice.deleteReviewByPid(pId);
-
-			// 해당 상품 삭제
-			productservice.deleteProduct(pId);
+		try {
+			for(int pId : pIds) {
+				// 해당 상품에 달린 리뷰 삭제
+				reviewservice.deleteReviewByPid(pId);
+				// 해당 상품 삭제
+				productservice.deleteProduct(pId);
+			}
+			return "success";  // 성공 시 반환값
+		} catch (Exception e) {
+			logger.error("상품 삭제 중 오류 발생: ", e);
+			return "error";    // 실패 시 반환값
 		}
-		
-		return "redirect:/admin/product";
 	}
 	
 	@Secured({"ROLE_ADMIN"})

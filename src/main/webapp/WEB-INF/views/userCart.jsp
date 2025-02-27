@@ -27,17 +27,41 @@
                 <tbody>
                     <c:forEach items="${cartItems}" var="item">
                         <tr>
-                            <td>${item.product.pName}</td>
-                            <td><fmt:formatNumber value="${item.product.pPrice}" pattern="#,###"/>원</td>
-                            <td>
+                            <td class="align-middle">
+                                <!-- 상품 이미지와 이름을 함께 표시 -->
+                                <div class="d-flex align-items-center">
+                                    <c:choose>
+                                        <c:when test="${not empty item.product.pImgpath}">
+                                            <img src="${item.product.pImgpath}" 
+                                                 alt="${item.product.pName}"
+                                                 class="me-3"
+                                                 style="width: 50px; height: 50px; object-fit: contain;">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <%-- 기본 이미지 표시 --%>
+                                            <img src="${pageContext.request.contextPath}/resources/images/no-image.png" 
+                                                 alt="상품 이미지 없음"
+                                                 class="me-3"
+                                                 style="width: 50px; height: 50px; object-fit: contain;">
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <span>${item.product.pName}</span>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <fmt:formatNumber value="${item.product.pPrice}" pattern="#,###"/>원
+                            </td>
+                            <td class="align-middle">
                                 <div class="input-group" style="width: 150px;">
                                     <button class="btn btn-outline-secondary" onclick="updateAmount('${item.cartId}', -1)">-</button>
                                     <input type="text" class="form-control text-center" value="${item.cartAmount}" readonly>
                                     <button class="btn btn-outline-secondary" onclick="updateAmount('${item.cartId}', 1)">+</button>
                                 </div>
                             </td>
-                            <td><fmt:formatNumber value="${item.product.pPrice * item.cartAmount}" pattern="#,###"/>원</td>
-                            <td>
+                            <td class="align-middle">
+                                <fmt:formatNumber value="${item.product.pPrice * item.cartAmount}" pattern="#,###"/>원
+                            </td>
+                            <td class="align-middle">
                                 <button class="btn btn-danger btn-sm" onclick="removeItem('${item.cartId}')">삭제</button>
                             </td>
                         </tr>

@@ -34,17 +34,6 @@
         <title>쇼핑몰 페이지</title>
     </head>
     <body>
-        
-        <!-- Header-->
-        <!--<header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
-                </div>
-            </div>
-        </header> -->
-
         <!-- Header-->
         <header>
             <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -59,7 +48,7 @@
                 <div class="carousel-inner">
                     <a href="${pageContext.request.contextPath}/productDetail?pId=55">
                         <div class="carousel-item active">
-                            <img src="https://via.placeholder.com/1920x800" class="d-block w-100" >
+                            <img src="https://placehold.co/1920x800" class="d-block w-100" >
                             <div class="carousel-caption">
                                 <h2>배너 테스트1</h2>
                             </div>
@@ -67,7 +56,7 @@
                     </a>
                     <a href="${pageContext.request.contextPath}/productDetail?pId=56">
                         <div class="carousel-item">
-                            <img src="https://via.placeholder.com/1920x800" class="d-block w-100">
+                            <img src="https://placehold.co/1920x800" class="d-block w-100">
                             <div class="carousel-caption">
                                 <h2>배너 테스트2</h2>
                             </div>
@@ -75,7 +64,7 @@
                     </a>
                     <a href="${pageContext.request.contextPath}/productDetail?pId=57">
                         <div class="carousel-item">
-                            <img src="https://via.placeholder.com/1920x800" class="d-block w-100">
+                            <img src="https://placehold.co/1920x800" class="d-block w-100">
                             <div class="carousel-caption">
                                 <h2>배너 테스트3</h2>
                             </div>

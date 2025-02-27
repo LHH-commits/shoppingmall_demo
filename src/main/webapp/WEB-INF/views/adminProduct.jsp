@@ -45,19 +45,26 @@
 		console.log(selectedProducts);
 		
 		if(selectedProducts.length > 0) {
-			$.ajax({
-				url: '/admin/deleteProduct',
-				type: 'POST',
-				data: {pIds: selectedProducts},
-				traditional: true,
-				success: function(response) {
-					alert('삭제 완료');
-					loadProducts();
-				},
-				error: function(error) {
-					alert('삭제에 실패했습니다. 다시 시도해주세요.');
-				}
-			});
+			if(confirm('선택한 상품을 삭제하시겠습니까?')) {
+				$.ajax({
+					url: '/admin/deleteProduct',
+					type: 'POST',
+					data: {pIds: selectedProducts},
+					traditional: true,
+					success: function(response) {
+						if(response === 'success') {
+							alert('삭제가 완료되었습니다.');
+							loadProducts();
+						} else {
+							alert('삭제에 실패했습니다. 다시 시도해주세요.');
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('Error:', error);
+						alert('삭제 처리 중 오류가 발생했습니다.');
+					}
+				});
+			}
 		} else {
 			alert('삭제할 상품을 먼저 선택해주세요.');
 		}

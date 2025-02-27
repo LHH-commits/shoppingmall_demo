@@ -3,13 +3,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<style>
+/* 체크박스 스타일 커스터마이징 */
+.form-check-input {
+    border: 2px solid #dee2e6;  /* 테두리 굵기와 색상 조정 */
+    opacity: 1;                 /* 투명도 제거 */
+}
+
+.form-check-input:hover {
+    border-color: #6c757d;      /* 호버 시 테두리 색상 */
+    cursor: pointer;            /* 호버 시 커서 변경 */
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;  /* 체크 시 배경색 */
+    border-color: #0d6efd;      /* 체크 시 테두리 색상 */
+}
+</style>
+
 <!-- 주문 목록 테이블 -->
 <div class="table-responsive">
     <table class="table table-hover">
         <thead class="table-light">
             <tr>
                 <th class="text-center" style="width: 50px;">
-                    <input type="checkbox" class="form-check-input" id="checkAll">
+                    <input type="checkbox" class="form-check-input" id="checkAll" 
+                           style="width: 20px; height: 20px;">
                 </th>
                 <th style="width: 160px;">주문일시</th>
                 <th style="width: 120px;">주문번호</th>
@@ -23,7 +42,8 @@
             <c:forEach var="order" items="${orders}">
                 <tr>
                     <td class="text-center">
-                        <input type="checkbox" class="form-check-input chkOrder" value="${order.oId}">
+                        <input type="checkbox" class="form-check-input chkOrder" 
+                               value="${order.oId}" style="width: 20px; height: 20px;">
                     </td>
                     <td class="align-middle">
                         <fmt:formatDate value="${order.orders.oDatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
